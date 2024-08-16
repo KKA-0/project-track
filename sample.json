@@ -1,0 +1,50 @@
+[
+    {
+        "title": "React Tutorial",
+        "imageUri": "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "info": "Best in the world react course",
+        "progress": 90,
+        "sections" : [
+            {
+                "title":"React Intro",
+                "videos": [
+                    {
+                        "title":"React Setup",
+                        "uri": "youtube.com/xyz"
+                    }
+                ]
+            },
+            {
+                "title":"React Hooks",
+                "videos": [
+                    {
+                        "title":"What are React Hooks?",
+                        "uri": "youtube.com/xyz"
+                    },
+                    {
+                        "title":"useState Hook",
+                        "uri": "youtube.com/xyz"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "title": "NodeJs Tutorial",
+        "imageUri": "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "info": "Best in the world react course",
+        "progress": 90
+    },
+    {
+        "title": "NextJs Tutorial",
+        "imageUri": "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "info": "Best in the world react course",
+        "progress": 90
+    },
+    {
+        "title": "MongoDB Tutorial",
+        "imageUri": "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        "info": "Best in the world react course",
+        "progress": 90
+    }
+]

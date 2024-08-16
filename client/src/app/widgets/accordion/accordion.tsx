@@ -63,6 +63,33 @@ export default function CustomizedAccordions() {
         </AccordionSummary>
         <AccordionDetails>
           <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+          <VideoCard/>
+
         </AccordionDetails>
       </Accordion>
       <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
