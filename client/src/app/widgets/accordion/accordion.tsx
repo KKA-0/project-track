@@ -10,6 +10,13 @@ import MuiAccordionSummary, {
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import VideoCard from "./../videoCard/videoCard"
+import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from "next/navigation";
+
+interface VideoCardProps {
+  videoData: Array<object>
+}
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -55,69 +62,29 @@ export default function CustomizedAccordions() {
       setExpanded(newExpanded ? panel : false);
     };
 
+    const searchParams = useSearchParams();
+    const params = Object.fromEntries(searchParams.entries());
+    const paramsPlaylistid = params.playlistId;
+    const StatePlaylists = useSelector((state: any) => state.store.playlists[paramsPlaylistid].sections)
+
   return (
     <div>
-      <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-        <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-          <Typography>React Tutorials</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-          <VideoCard/>
-
-        </AccordionDetails>
-      </Accordion>
-      <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-        <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-          <Typography>NodeJs Tutorials</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum dolor
-            sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-            sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
-      <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
-        <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
-          <Typography>MongoDB Tutorials</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget. Lorem ipsum dolor
-            sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-            sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
+      {
+            (StatePlaylists) ? 
+            Object.keys(StatePlaylists).map(key => (
+              <Accordion expanded={expanded === key} onChange={handleChange(key)}>
+                <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+                  <Typography>{key}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <VideoCard videoData={StatePlaylists[key]} section={key}/>
+                </AccordionDetails>
+              </Accordion>
+              )
+            )
+            : null
+      }
+      
     </div>
   );
 }

@@ -13,12 +13,21 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-
+import Progress from '../progress/progress';
+import { useSearchParams } from "next/navigation";
+import { useSelector } from 'react-redux';
 
 const pages = ['Products', 'Open Source', 'Developers'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
+
+  const StatePlaylists = useSelector((state: any) => state.store.playlists)
+
+  const searchParams = useSearchParams();
+  const params = Object.fromEntries(searchParams.entries());
+  const playlistId = params.playlistId
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -38,11 +47,12 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ bgcolor: "rgb(13, 17, 25)", }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1,  }} />
           <Typography
+          
             variant="h6"
             noWrap
             component="a"
@@ -55,12 +65,13 @@ function Navbar() {
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              
             }}
           >
             Project Track
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' },  }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -68,6 +79,7 @@ function Navbar() {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
+              sx={{}}
             >
               <MenuIcon />
             </IconButton>
@@ -96,7 +108,7 @@ function Navbar() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1,  }} />
           <Typography
             variant="h5"
             noWrap
@@ -111,22 +123,25 @@ function Navbar() {
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              
             }}
           >
             LOGO
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex',  } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
-              >
+                >
                 {page}
               </Button>
             ))}
           </Box>
-
+          {
+            (playlistId) ?<Progress sx={{margin: "5px 20px"}} value={StatePlaylists[playlistId].completed} textColor='white'/>: null
+          }
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

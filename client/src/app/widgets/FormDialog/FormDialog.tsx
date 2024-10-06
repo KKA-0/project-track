@@ -8,13 +8,35 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import ls, {get,set} from "local-storage";
-
+import { useRef } from 'react';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import { createPlaylist } from "./../../../libs/features/playlists.api"
+import { useAppDispatch } from "./../../../libs/hooks/hooks"
+import { TypeAnimation } from 'react-type-animation';
+import { useSelector } from 'react-redux';
+import { useEffect } from "react"
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
+  const [BackdropState, setBackdropState] = React.useState(false);
   const [PlaylistVideos, setPlaylistVideos] = React.useState("");
+  const URI = useRef<HTMLInputElement | null>(null);
+  const dispatch = useAppDispatch()
 
+  const StatePlaylists = useSelector((state: any) => state.store.playlists)
+
+  useEffect(() => {
+    handleCloseBackdrop()
+  }, [StatePlaylists])
+  
+
+  const handleCloseBackdrop = () => {
+    setBackdropState(false);
+  };
+  const handleOpenBackdrop = () => {
+    setBackdropState(true);
+  };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -24,21 +46,46 @@ export default function FormDialog() {
   };
 
   const handlePlaylists = async () => {
-    const object = {
-      title: "React Tutorial",
-      imageUri: "https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      info: "Best in the world react course",
-      progress: 90
+
+    if (URI.current) {
+      if(URI.current.value != null && URI.current.value != ""){
+        handleClose()
+        handleOpenBackdrop()
+        dispatch(createPlaylist({ url: URI.current.value }))
+      }
     }
-    const objects = get<Array<object>>('playlists');
-    objects.push(object)
-
-    set<Array<object>>('playlists', objects);
-
   }
 
   return (
     <React.Fragment>
+      <Backdrop
+        sx={(theme: any) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        open={BackdropState}
+        
+      >
+        <div className="flex flex-col justify-center items-center h-screen">
+          <CircularProgress color="inherit" />
+          <TypeAnimation
+            sequence={[
+              'Fetching playlist data',
+              3000, // Waits 3s
+              'Generating playlist data',
+              10000, // Waits 10s
+              'Using AI Magic 🪄',
+              10000, // Waits 10s
+              'Making Things Ready!!!',
+              5000,
+            ]}
+            wrapper="span"
+            cursor={true}
+            repeat={Infinity}
+            style={{ fontSize: '1em', display: 'inline-block' }}
+          />
+          <h2 style={{ color: "grey" }}>Please wait a moment, this may take up to a minute.</h2>
+          <button className='text-white hover:text-red-500' onClick={handleCloseBackdrop}>Close</button>
+        </div>
+        
+      </Backdrop>
       <Button variant="outlined" className='m-8' onClick={handleClickOpen}>
         Add New Playlist
       </Button>
@@ -61,9 +108,10 @@ export default function FormDialog() {
         <DialogTitle>Add New Playlist</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Just Paste the youtube playlist you want to add!
+          Please provide the link to the YouTube playlist you wish to add.
           </DialogContentText>
           <TextField
+            inputRef={URI}
             autoFocus
             required
             margin="dense"
