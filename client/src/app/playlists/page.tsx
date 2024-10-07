@@ -5,7 +5,7 @@ import Navbar from '../widgets/navbar/navbar'
 import Cards from "../widgets/cards/cards"
 import FormDialog from '../widgets/FormDialog/FormDialog'
 import ls, { get, set } from "local-storage";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { getPlaylist } from '@/libs/features/playlists.slice'
 
@@ -58,6 +58,7 @@ export default function Playlists() {
         <FormDialog />
       </div>
       <div className="flex flex-wrap">
+      <Suspense fallback={<div>Loading...</div>}>
         {
           Object.keys(playlists).length > 0 ? 
             Object.keys(playlists).map(key => (
@@ -72,6 +73,7 @@ export default function Playlists() {
             ))
           : null
         }
+        </Suspense>
       </div>
     </>
   )

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import StoreProvider from './../libs/provider'
+import { Suspense } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <AppRouterCacheProvider>
           <StoreProvider>
+            <Suspense fallback={<div>Loading...</div>}>
             {children}
+            </Suspense>
           </StoreProvider>
         </AppRouterCacheProvider>
       </body>

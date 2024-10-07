@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import { useAppDispatch } from "./../../../libs/hooks/hooks"
 import { videoStatus, currentVideo } from "./../../../libs/features/playlists.slice"
@@ -41,10 +41,12 @@ export default function VideoCard({ videoData, section }: {videoData: any, secti
   
   return (
     <>
+      <Suspense fallback={<div>Loading...</div>}>
       {
         (videoData) ? 
         Object.keys(videoData).map(key => (
           <Box
+            key={key} 
             data-tooltip-id="my-tooltip" data-tooltip-content={key}
             sx={{
               flexGrow: 1,
@@ -91,6 +93,7 @@ export default function VideoCard({ videoData, section }: {videoData: any, secti
       ) : null
       }
     <Tooltip id="my-tooltip" />
+    </Suspense>
     </>
   );
 }

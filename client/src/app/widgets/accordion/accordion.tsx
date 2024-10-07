@@ -11,7 +11,7 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import VideoCard from "./../videoCard/videoCard"
 import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense  } from 'react';
 import { useSearchParams } from "next/navigation";
 
 interface VideoCardProps {
@@ -69,10 +69,11 @@ export default function CustomizedAccordions() {
 
   return (
     <div>
+      <Suspense fallback={<div>Loading...</div>}>
       {
             (StatePlaylists) ? 
             Object.keys(StatePlaylists).map(key => (
-              <Accordion expanded={expanded === key} onChange={handleChange(key)}>
+              <Accordion key={key} expanded={expanded === key} onChange={handleChange(key)}>
                 <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
                   <Typography>{key}</Typography>
                 </AccordionSummary>
@@ -84,7 +85,7 @@ export default function CustomizedAccordions() {
             )
             : null
       }
-      
+      </Suspense>
     </div>
   );
 }
