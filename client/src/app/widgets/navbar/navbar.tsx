@@ -140,7 +140,7 @@ function Navbar() {
             ))}
           </Box>
           {
-            (playlistId) ?<Progress sx={{margin: "5px 20px"}} value={StatePlaylists[playlistId].completed} textColor='white'/>: null
+            (playlistId) ?<Progress sx={{margin: "5px 20px"}} value={StatePlaylists[playlistId]?.completed} textColor='white'/>: null
           }
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">

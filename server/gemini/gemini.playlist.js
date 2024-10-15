@@ -5,6 +5,7 @@ const textsi_1 = {text: `Given a JSON object with a list of videos (each having 
   "info": "Brief summary in 15 words.",
   "completed": 0,
   "playlistId": "unique_playlist_id",
+  "channelName": "channnelName",
   "sections": {
     "React Tutorials": {
       "React Tutorial: Introduction to React": {

@@ -28,6 +28,7 @@ interface Playlist {
     info: string;
     completed: number;
     playlistId: string;
+    channelName: string;
     sections: {
         [sectionTitle: string]: Section;
     };

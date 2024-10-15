@@ -4,52 +4,11 @@ import React from 'react'
 import Navbar from '../widgets/navbar/navbar'
 import Cards from "../widgets/cards/cards"
 import FormDialog from '../widgets/FormDialog/FormDialog'
-import ls, { get, set } from "local-storage";
-import { useEffect, useState, Suspense } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
-import { getPlaylist } from '@/libs/features/playlists.slice'
-
-interface Video {
-  link: string;
-  done: number;
-}
-
-interface Section {
-  [videoTitle: string]: Video;
-}
-
-interface Playlist {
-  key: string;
-  completed: number;
-  title: string;
-  imageUri: string;
-  info: string;
-  playlistId: string;
-  sections: { [sectionName: string]: Section };
-}
-
-type PlaylistsState = { [key: string]: Playlist };
+import { Suspense } from 'react';
+import { usePlaylists } from "@/libs/hooks/usePlaylistsHook"
 
 export default function Playlists() {
-  const StatePlaylists: PlaylistsState = useSelector((state: any) => state.store.playlists)
-  const [playlists, setPlaylists] = useState<PlaylistsState>({});
-  const dispatch = useDispatch()
-
-  // get data from localstorage and set to global state
-  useEffect(() => {
-    const fetchData = async () => {
-      const playlistData = get<PlaylistsState>('playlists');
-      if (playlistData) {
-        dispatch(getPlaylist(playlistData))
-      }
-    }
-    fetchData()
-  }, [dispatch])
-
-  // set global state playlist data to local state 
-  useEffect(() => {
-    setPlaylists(StatePlaylists)
-  }, [StatePlaylists])
+  const playlists = usePlaylists();
 
   return (
     <>
@@ -69,6 +28,7 @@ export default function Playlists() {
                 info={playlists[key].info} 
                 completed={playlists[key].completed} 
                 playlistId={playlists[key].playlistId} 
+                channelName={playlists[key].channelName}
               />
             ))
           : null

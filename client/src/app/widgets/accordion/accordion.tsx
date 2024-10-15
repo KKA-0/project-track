@@ -11,7 +11,7 @@ import MuiAccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import VideoCard from "./../videoCard/videoCard"
 import { useSelector } from 'react-redux';
-import { useState, useEffect, Suspense  } from 'react';
+import { Suspense  } from 'react';
 import { useSearchParams } from "next/navigation";
 
 interface VideoCardProps {
@@ -65,7 +65,7 @@ export default function CustomizedAccordions() {
     const searchParams = useSearchParams();
     const params = Object.fromEntries(searchParams.entries());
     const paramsPlaylistid = params.playlistId;
-    const StatePlaylists = useSelector((state: any) => state.store.playlists[paramsPlaylistid].sections)
+    const StatePlaylists = useSelector((state: any) => state.store.playlists[paramsPlaylistid]?.sections)
 
   return (
     <div>
@@ -77,7 +77,7 @@ export default function CustomizedAccordions() {
                 <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
                   <Typography>{key}</Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails sx={{maxHeight: "80vh", minHeight: "fit-content", overflowY: "scroll"}}>
                   <VideoCard videoData={StatePlaylists[key]} section={key}/>
                 </AccordionDetails>
               </Accordion>
