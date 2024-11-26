@@ -1,5 +1,9 @@
+const path = require('path');
 const {VertexAI} = require('@google-cloud/vertexai');
-const textsi_1 = {text: `Given a JSON object with a list of videos (each having a title and link), categorize the videos into sections based on topics like React, Node.js, etc. For each section, create a list of videos with title and link. The final structure should have a title, a short summary, completion status, and sections with categorized videos just like shown below json structure
+const textsi_1 = {text: `Given a JSON object with a list of videos (each having a title and link),
+  categorize the videos into sections based on topics like React, Node.js, etc. For each section,
+  create a list of videos with title and link. The final structure should have a title, a short summary,
+  completion status, and sections with categorized videos just like shown below json structure
 {
   "title": "Playlist Name",
   "info": "Brief summary in 15 words.",
@@ -25,12 +29,22 @@ const textsi_1 = {text: `Given a JSON object with a list of videos (each having 
     }
   }
 }
-
 `};
 
 // Initialize Vertex with your Cloud project and location
 const vertex_ai = new VertexAI({project: 'project-tracking-432716', location: 'asia-south1'});
 const model = 'gemini-1.5-pro-001';
+
+
+// Resolve the path to the service account file dynamically
+const serviceAccountPath = path.join(__dirname, 'project-tracking-432716-7e4887d6d1aa.json');
+
+// Set the environment variable to the service account file's location
+process.env.GOOGLE_APPLICATION_CREDENTIALS = serviceAccountPath;
+
+// Debugging: Log the resolved path to ensure it's correct in Lambda
+console.log('Service Account Path:', process.env.GOOGLE_APPLICATION_CREDENTIALS);
+
 
 // Instantiate the models
 const generativeModel = vertex_ai.preview.getGenerativeModel({

@@ -1,0 +1,31 @@
+org: uskidrive
+service: project-tracking
+
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ap-south-1
+  environment:
+    youtube_data_v3_api_Key: "api_key"
+    
+functions:
+  api:
+    handler: ./dist/serverless.handler
+    timeout: 120
+    events:
+      - httpApi:
+          path: /
+          method: ANY
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+package:
+  exclude:
+    - .git/**
+    - .serverless/**
+    - src/**
+    - test/**
+
+
