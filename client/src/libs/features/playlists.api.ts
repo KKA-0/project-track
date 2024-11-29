@@ -6,7 +6,7 @@ export const createPlaylist = createAsyncThunk(
   async (playlistData: {url: any}, thunkAPI) => {
     try{
         console.log(playlistData.url)
-        const response = await axios.post('http://localhost:4000/playlists', 
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_HOST}`, 
           {
             "playlistId": playlistData.url
           }
