@@ -28,7 +28,7 @@ export default function CTA() {
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <Link
-            href="/get-started"
+            href="/playlists"
             className="bg-purple-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-purple-700 transition duration-300"
           >
             Get Started Now

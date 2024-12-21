@@ -9,6 +9,7 @@ import HowItWorks from './widgets/HowItWorks'
 import CTA from './widgets/CTA'
 import Footer from './widgets/Footer'
 import BackgroundAnimation from './widgets/BackgroundAnimation'
+import Subscription from './widgets/Subscription'
 
 const page = () => {
   
@@ -22,6 +23,7 @@ const page = () => {
           <VideoPlayer />
           <Features />
           <HowItWorks />
+          <Subscription />
           <CTA />
         </main>
         <Footer />
