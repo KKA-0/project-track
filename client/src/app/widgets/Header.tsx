@@ -12,7 +12,7 @@ export default function Header() {
     >
       <nav className="container mx-auto px-6 py-3 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold text-purple-400">
-          Project Tracking
+          Diyan
         </Link>
         <div className="space-x-4">
           <Link href="#features" className="text-gray-300 hover:text-purple-400">Features</Link>

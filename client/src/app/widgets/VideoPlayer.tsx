@@ -22,7 +22,7 @@ export default function VideoPlayer() {
         }`}></div>
         <iframe
           src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-          title="Project Tracking Intro Video"
+          title="Diyan Intro Video"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           className="w-full h-[400px] relative z-10"

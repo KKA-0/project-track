@@ -8,8 +8,8 @@ import { Suspense } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Project Track",
-  description: "Keep in Track Keep on Learning",
+  title: "Diyan",
+  description: "Keep in Track, Keep on Learning",
 };
 
 export default function RootLayout({
