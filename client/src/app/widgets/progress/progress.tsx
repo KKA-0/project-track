@@ -8,10 +8,10 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Tooltip } from 'react-tooltip'
 
-export default function progress(props: CircularProgressProps & { value: number, textColor: string }) {
+export default function progress(props: CircularProgressProps & { value: number, textColor: string, playlistId: string }) {
   return (
     <>
-    <Box sx={{ position: 'relative', display: 'inline-flex' }} data-tooltip-id="my-tooltip" data-tooltip-content={props.value+ "% of Playlist is completed"}>
+    <Box sx={{ position: 'relative', display: 'inline-flex' }} data-tooltip-id={props.playlistId} data-tooltip-content={Math.round(props.value) + "% of Playlist is completed"}>
       <CircularProgress variant="determinate" {...props} />
       <Box
         sx={{
@@ -33,7 +33,7 @@ export default function progress(props: CircularProgressProps & { value: number,
         >{`${Math.round(props.value)}%`}</Typography>
       </Box>
     </Box>
-    <Tooltip id="my-tooltip" />
+    <Tooltip id={props.playlistId} />
     </>
   )
 }

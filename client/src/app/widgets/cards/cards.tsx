@@ -29,7 +29,7 @@ export default function Cards({ imageUri, title, info, completed, playlistId, ch
           <Typography variant="body2" color="text.secondary">
             {channelName}
           </Typography>
-          <Progress value={completed} textColor="black"/>
+          <Progress value={completed} textColor="black" playlistId={playlistId}/>
         </CardContent>
       </CardActionArea>
       </Link>

@@ -47,7 +47,7 @@ export default function VideoCard({ videoData, section }: {videoData: any, secti
         Object.keys(videoData).map(key => (
           <Box
             key={key} 
-            data-tooltip-id="my-tooltip" data-tooltip-content={key}
+            data-tooltip-id={playlistId} data-tooltip-content={key}
             sx={{
               flexGrow: 1,
               overflow: 'hidden',
@@ -92,7 +92,7 @@ export default function VideoCard({ videoData, section }: {videoData: any, secti
         )
       ) : null
       }
-    <Tooltip id="my-tooltip" />
+    <Tooltip id={playlistId} />
     </Suspense>
     </>
   );

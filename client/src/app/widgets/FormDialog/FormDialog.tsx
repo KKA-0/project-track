@@ -46,15 +46,31 @@ export default function FormDialog() {
   };
 
   const handlePlaylists = async () => {
-
     if (URI.current) {
-      if(URI.current.value != null && URI.current.value != ""){
-        handleClose()
-        handleOpenBackdrop()
-        dispatch(createPlaylist({ url: URI.current.value }))
+      const url = URI.current.value;
+      if (url) {
+        try {
+          const urlObj = new URL(url);
+          const listParam = urlObj.searchParams.get("list");
+  
+          if (listParam) {
+            console.log("Extracted list ID:", listParam); // Debugging purpose
+            
+            handleClose();
+            handleOpenBackdrop();
+            
+            // Dispatching with extracted list parameter
+            dispatch(createPlaylist({ url: listParam }));
+          } else {
+            console.error("No 'list' parameter found in the URL");
+          }
+        } catch (error) {
+          console.error("Invalid URL", error);
+        }
       }
     }
-  }
+  };
+  
 
   return (
     <React.Fragment>
