@@ -9,7 +9,7 @@ const options = [
 //   'Atria',
 ];
 
-const ITEM_HEIGHT = 1;
+const ITEM_HEIGHT = 48;
 
 export default function Options() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -51,7 +51,7 @@ export default function Options() {
         }}
       >
         {options.map((option) => (
-          <MenuItem key={option} onClick={handleClose}>
+          <MenuItem key={option} selected={option === 'Delete'} onClick={handleClose}>
             {option}
           </MenuItem>
         ))}
