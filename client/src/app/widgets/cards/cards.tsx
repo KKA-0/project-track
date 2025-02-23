@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import Progress from '../progress/progress';
 import Link from 'next/link';
+import Options from '../options/options'
 
 export default function Cards({ imageUri, title, info, completed, playlistId, channelName }: {imageUri: string, title: string, info: string, playlistId: string, completed: number, channelName: string}) {
   return (
@@ -26,13 +27,18 @@ export default function Cards({ imageUri, title, info, completed, playlistId, ch
           <Typography variant="body2" color="text.secondary">
             {info}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="red">
             {channelName}
           </Typography>
-          <Progress value={completed} textColor="black" playlistId={playlistId}/>
+          <div className='my-1'>
+          </div>
         </CardContent>
       </CardActionArea>
       </Link>
+      <div className='w-full flex justify-between'>
+        <Progress value={completed} textColor="black" playlistId={playlistId}/>
+        <Options/>
+      </div>
     </Card>
   );
 }
