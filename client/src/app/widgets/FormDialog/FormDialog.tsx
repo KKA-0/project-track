@@ -1,42 +1,35 @@
 "use client"
 
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { useRef } from 'react';
-import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
-import { createPlaylist } from "./../../../libs/features/playlists.api"
-import { useAppDispatch } from "./../../../libs/hooks/hooks"
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useRef } from 'react';
 import { TypeAnimation } from 'react-type-animation';
 import { useSelector } from 'react-redux';
-import { useEffect } from "react"
+import { useEffect } from "react";
+import { useAppDispatch } from "./../../../libs/hooks/hooks";
+import { createPlaylist } from "./../../../libs/features/playlists.api";
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
-  const [BackdropState, setBackdropState] = React.useState(false);
-  const [PlaylistVideos, setPlaylistVideos] = React.useState("");
+  const [backdropState, setBackdropState] = React.useState(false);
+  const [playlistVideos, setPlaylistVideos] = React.useState("");
   const URI = useRef<HTMLInputElement | null>(null);
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
-  const StatePlaylists = useSelector((state: any) => state.store.playlists)
+  const statePlaylists = useSelector((state: any) => state.store.playlists);
 
   useEffect(() => {
-    handleCloseBackdrop()
-  }, [StatePlaylists])
-  
+    handleCloseBackdrop();
+  }, [statePlaylists]);
 
   const handleCloseBackdrop = () => {
     setBackdropState(false);
   };
+
   const handleOpenBackdrop = () => {
     setBackdropState(true);
   };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -45,22 +38,24 @@ export default function FormDialog() {
     setOpen(false);
   };
 
-  const handlePlaylists = async () => {
+  const handlePlaylists = async (event?: React.FormEvent<HTMLFormElement>) => {
+    if (event) {
+      event.preventDefault();
+    }
+    
     if (URI.current) {
       const url = URI.current.value;
       if (url) {
         try {
           const urlObj = new URL(url);
           const listParam = urlObj.searchParams.get("list");
-  
+
           if (listParam) {
-            console.log("Extracted list ID:", listParam); // Debugging purpose
-            
+            console.log("Extracted list ID:", listParam);
             handleClose();
             handleOpenBackdrop();
-            
-            // Dispatching with extracted list parameter
             dispatch(createPlaylist({ url: listParam }));
+            setPlaylistVideos(url);
           } else {
             console.error("No 'list' parameter found in the URL");
           }
@@ -70,80 +65,130 @@ export default function FormDialog() {
       }
     }
   };
-  
 
   return (
-    <React.Fragment>
-      <Backdrop
-        sx={(theme: any) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-        open={BackdropState}
-        
-      >
-        <div className="flex flex-col justify-center items-center h-screen">
-          <CircularProgress color="inherit" />
-          <TypeAnimation
-            sequence={[
-              'Fetching playlist data',
-              3000, // Waits 3s
-              'Generating playlist data',
-              10000, // Waits 10s
-              'Using AI Magic 🪄',
-              10000, // Waits 10s
-              'Making Things Ready!!!',
-              5000,
-            ]}
-            wrapper="span"
-            cursor={true}
-            repeat={Infinity}
-            style={{ fontSize: '1em', display: 'inline-block' }}
-          />
-          <h2 style={{ color: "grey" }}>Please wait a moment, this may take up to a minute.</h2>
-          <button className='text-white hover:text-red-500' onClick={handleCloseBackdrop}>Close</button>
+    <Fragment>
+      {/* Loading Backdrop */}
+      <Transition show={backdropState} as={Fragment}>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+          <div className="bg-gray-900/50 p-8 rounded-2xl backdrop-blur-md border border-gray-700 max-w-md w-full mx-4">
+            <div className="flex flex-col items-center space-y-6">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+              <div className="text-purple-400 text-lg font-medium">
+                <TypeAnimation
+                  sequence={[
+                    'Fetching playlist data',
+                    3000,
+                    'Generating playlist data',
+                    10000,
+                    'Using AI Magic ✨',
+                    10000,
+                    'Making Things Ready!!!',
+                    5000,
+                  ]}
+                  wrapper="span"
+                  cursor={true}
+                  repeat={Infinity}
+                  style={{ fontSize: '1.125em', display: 'inline-block' }}
+                />
+              </div>
+              <p className="text-gray-400 text-center">
+                Please wait a moment, this may take up to a minute.
+              </p>
+              <button
+                onClick={handleCloseBackdrop}
+                className="px-4 py-2 text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors duration-200"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
-        
-      </Backdrop>
-      <Button variant="outlined" className='m-8' onClick={handleClickOpen}>
-        Add New Playlist
-      </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          component: 'form',
-          onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            const formData = new FormData(event.currentTarget);
-            const formJson = Object.fromEntries((formData as any).entries());
-            const email = formJson.email;
-            console.log(email);
-            setPlaylistVideos(email)
-            handleClose();
-          },
-        }}
+      </Transition>
+
+      {/* Add Playlist Button */}
+      <button
+        onClick={handleClickOpen}
+        className="m-8 px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg
+          hover:from-purple-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200
+          shadow-lg hover:shadow-purple-500/25 font-medium"
       >
-        <DialogTitle>Add New Playlist</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-          Please provide the link to the YouTube playlist you wish to add.
-          </DialogContentText>
-          <TextField
-            inputRef={URI}
-            autoFocus
-            required
-            margin="dense"
-            id="name"
-            name="email"
-            label="https://www.youtube.com/playlist"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" onClick={handlePlaylists}>Create</Button>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
+        Add New Playlist
+      </button>
+
+      {/* Dialog */}
+      <Transition appear show={open} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={handleClose}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black/25 backdrop-blur-sm" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <form onSubmit={handlePlaylists}>
+                    <Dialog.Title
+                      as="h3"
+                      className="text-2xl font-semibold leading-6 text-gray-900 mb-4"
+                    >
+                      Add New Playlist
+                    </Dialog.Title>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500 mb-4">
+                        Please provide the link to the YouTube playlist you wish to add.
+                      </p>
+                      <div className="mt-4">
+                        <input
+                          ref={URI}
+                          type="text"
+                          name="playlist"
+                          className="w-full px-4 py-3 rounded-lg border border-gray-300 text-black focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-200"
+                          placeholder="https://www.youtube.com/playlist"
+                          required
+                          autoFocus
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-6 flex justify-end space-x-3">
+                      <button
+                        type="button"
+                        className="inline-flex justify-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 transition-all duration-200"
+                        onClick={handleClose}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="inline-flex justify-center rounded-lg border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 transition-all duration-200"
+                      >
+                        Create
+                      </button>
+                    </div>
+                  </form>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+    </Fragment>
   );
 }

@@ -21,12 +21,22 @@ export default function VideoPlayer() {
           isHovered ? 'opacity-30 blur-xl' : 'opacity-20 blur-lg'
         }`}></div>
         <iframe
-          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+          src="https://www.loom.com/embed/dc9567c29ffd4624972c946bcda00a08?sid=b59083ba-bea0-476d-848b-5441d9a8b383"
           title="Diyan Intro Video"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           className="w-full h-[400px] relative z-10"
         ></iframe>
+        {/* <div style={{position: "relative", paddingBottom: "56.25%", height: 0}}>
+          <iframe
+            src="https://www.loom.com/embed/9664423cab2141908f4b0e79bf965b33?sid=e18aab05-5a49-485a-84df-63a3c9a9f575"
+            frameborder="0"
+            webkitallowfullscreen
+            mozallowfullscreen
+            allowfullscreen
+            style={{position: "absolute", top: "0", left: "0", width: "100%", height: "100%"}}
+          ></iframe>
+        </div> */}
       </motion.div>
     </section>
   )

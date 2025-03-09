@@ -9,22 +9,30 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.760.0",
     "@emotion/cache": "^11.13.1",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
+    "@headlessui/react": "^2.2.0",
     "@mui/icons-material": "^5.16.5",
     "@mui/material-nextjs": "^5.16.4",
+    "@radix-ui/react-dropdown-menu": "^2.1.6",
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.7",
+    "class-variance-authority": "^0.7.1",
     "framer-motion": "^11.15.0",
     "local-storage": "^2.0.0",
     "lucide-react": "^0.468.0",
     "next": "14.2.5",
+    "next-auth": "^4.24.11",
+    "oidc-client-ts": "^3.1.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-oidc-context": "^3.2.0",
     "react-redux": "^9.1.2",
     "react-tooltip": "^5.28.0",
-    "react-type-animation": "^3.2.0"
+    "react-type-animation": "^3.2.0",
+    "tailwind-merge": "^3.0.2"
   },
   "devDependencies": {
     "@types/node": "^20",

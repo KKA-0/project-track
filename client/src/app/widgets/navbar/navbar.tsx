@@ -1,179 +1,179 @@
 "use client"
+
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import Progress from '../progress/progress';
 import { useSearchParams } from "next/navigation";
 import { useSelector } from 'react-redux';
+import Link from 'next/link';
+import { Menu, X, ChevronDown, Zap, User } from 'lucide-react';
 
 const pages = ['Products', 'Open Source', 'Developers'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
-
-  const StatePlaylists = useSelector((state: any) => state.store.playlists)
+  const StatePlaylists = useSelector((state: any) => state.store.playlists);
 
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
-  const playlistId = params.playlistId
+  const playlistId = params.playlistId;
 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [userMenuOpen, setUserMenuOpen] = React.useState(false);
+  
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+  const toggleUserMenu = () => setUserMenuOpen(!userMenuOpen);
+  
+  // Close menus when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = () => {
+      setUserMenuOpen(false);
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   return (
-    <AppBar position="static" sx={{ bgcolor: "rgb(13, 17, 25)", }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1,  }} />
-          <Typography
-          
-            variant="h6"
-            noWrap
-            component="a"
-            href="./"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-              
-            }}
-          >
-            Diyan
-          </Typography>
+    <nav className="bg-black bg-opacity-90 border-b border-cyan-900/30 backdrop-blur-sm relative z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo and brand */}
+          <div className="flex items-center">
+            <Link href="./" className="flex items-center">
+              <Zap className="h-8 w-8 text-purple-400 mr-2" />
+              <span className="text-white font-mono text-xl font-bold tracking-widest bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                DIYAN
+              </span>
+            </Link>
+          </div>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' },  }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-              sx={{}}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1,  }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-              
-            }}
-          >
-            LOGO
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex',  } }}>
+          {/* Desktop navigation */}
+          <div className="hidden md:flex items-center space-x-8">
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-                >
+              <Link 
+                key={page} 
+                href="#" 
+                className="text-gray-300 hover:text-cyan-400 px-3 py-2 text-sm font-medium tracking-wide transition-colors duration-200 ease-in-out"
+              >
                 {page}
-              </Button>
+              </Link>
             ))}
-          </Box>
-          {
-            (playlistId) ?<Progress sx={{margin: "5px 20px"}} value={StatePlaylists[playlistId]?.completed} textColor='white'  playlistId={playlistId}/>: null
-          }
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+            
+            {/* Progress bar */}
+            {playlistId && (
+              <div className="mx-4 w-40">
+                <div className="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-500 ease-out"
+                    style={{ width: `${StatePlaylists[playlistId]?.completed || 0}%` }}
+                  />
+                </div>
+                <div className="text-xs text-cyan-400 mt-1 text-right">
+                {(StatePlaylists[playlistId]?.completed || 0).toFixed(1)}%
+                </div>
+              </div>
+            )}
+
+            {/* User menu */}
+            <div className="relative ml-3" onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={toggleUserMenu}
+                className="flex items-center text-sm focus:outline-none"
+              >
+                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 p-0.5">
+
+                  <div className="h-full w-full rounded-full bg-gray-900 flex items-center justify-center">
+                    <User className="h-4 w-4 text-purple-400" />
+                  </div>
+                </div>
+                <ChevronDown className={`ml-1 h-4 w-4 text-gray-400 transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* User dropdown menu */}
+              {userMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-gray-900 border border-cyan-900/50 rounded-md shadow-lg py-1 z-50 backdrop-blur-sm">
+                  {settings.map((setting) => (
+                    <Link
+                      key={setting}
+                      href="#"
+                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-cyan-900/20 hover:text-cyan-400"
+                    >
+                      {setting}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden flex items-center">
+            {playlistId && (
+              <div className="mr-4 w-20">
+                <div className="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-cyan-400 to-blue-500"
+                    style={{ width: `${StatePlaylists[playlistId]?.completed || 0}%` }}
+                  />
+                </div>
+              </div>
+            )}
+            
+            <button
+              onClick={toggleMobileMenu}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none"
             >
+              {mobileMenuOpen ? (
+                <X className="block h-6 w-6 text-cyan-400" />
+              ) : (
+                <Menu className="block h-6 w-6 text-cyan-400" />
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-gray-900/95 backdrop-blur-sm border-t border-cyan-900/30 animate-fadeIn">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            {pages.map((page) => (
+              <Link
+                key={page}
+                href="#"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-cyan-900/20 hover:text-cyan-400"
+              >
+                {page}
+              </Link>
+            ))}
+          </div>
+          <div className="pt-4 pb-3 border-t border-cyan-900/30">
+            <div className="flex items-center px-5">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 p-0.5">
+                <div className="h-full w-full rounded-full bg-gray-900 flex items-center justify-center">
+                  <User className="h-5 w-5 text-cyan-400" />
+                </div>
+              </div>
+              <div className="ml-3">
+                <div className="text-base font-medium text-white">User Name</div>
+                <div className="text-sm font-medium text-gray-400">user@example.com</div>
+              </div>
+            </div>
+            <div className="mt-3 px-2 space-y-1">
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                <Link
+                  key={setting}
+                  href="#"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-cyan-900/20 hover:text-cyan-400"
+                >
+                  {setting}
+                </Link>
               ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            </div>
+          </div>
+        </div>
+      )}
+    </nav>
   );
 }
+
 export default Navbar;

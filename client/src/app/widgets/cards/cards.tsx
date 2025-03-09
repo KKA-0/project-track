@@ -1,44 +1,64 @@
 "use client"
 import * as React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
-import { CardActionArea } from '@mui/material';
-import Progress from '../progress/progress';
 import Link from 'next/link';
-import Options from '../options/options'
+import { MoreVertical, Play } from 'lucide-react';
 
 export default function Cards({ imageUri, title, info, completed, playlistId, channelName }: {imageUri: string, title: string, info: string, playlistId: string, completed: number, channelName: string}) {
-  return (
-    <Card sx={{ maxWidth: 330, margin: "25px" }}>
-      <Link href={{ pathname: '/playlists/player', query: { playlistId: playlistId } }}>
-      <CardActionArea>
-        {/* <CardMedia
-          component="img"
-          height="140"
-          image={(imageUri) ? imageUri : "https://images.unsplash.com/photo-1723946372143-94bdf3555536?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
-          alt="green iguana"
-        /> */}
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {title}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {info}
-          </Typography>
-          <Typography variant="body2" color="red">
-            {channelName}
-          </Typography>
-          <div className='my-1'>
-          </div>
-        </CardContent>
-      </CardActionArea>
-      </Link>
-      <div className='w-full flex justify-between'>
-        <Progress value={completed} textColor="black" playlistId={playlistId}/>
-        <Options/>
+  function ProgressBar({ value }: { value: number }) {
+    return (
+      <div className="relative w-full h-2 bg-indigo-700 rounded-full overflow-hidden">
+        <div 
+          className="absolute h-full bg-purple-500 rounded-full transition-all duration-300 glow"
+          style={{ width: `${value}%` }}
+        />
       </div>
-    </Card>
+    );
+  }
+  return (
+    <div className="group relative w-[330px] bg-gradient-to-br via-indigo-800 to-indigo-900 rounded-xl overflow-hidden border border-indigo-700 hover:border-purple-500 transition-all duration-300 m-2">
+      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:16px_16px]" />
+      
+      <div className="relative p-6 space-y-4">
+        <div className="flex justify-between items-start">
+          <h3 className="text-xl font-bold text-white group-hover:text-purple-500 transition-colors">
+            {title}
+          </h3>
+          <button className="p-1 hover:bg-indigo-700 rounded-full transition-colors">
+            <MoreVertical className="w-5 h-5 text-gray-400" />
+          </button>
+        </div>
+        
+        <p className="text-gray-400 text-sm">
+          {info}
+        </p>
+        
+        <div className="flex items-center space-x-2 text-purple-500">
+          <span className="text-sm font-medium">{channelName}</span>
+        </div>
+        
+        <div className="space-y-3">
+          <ProgressBar value={completed} />
+          <div className="flex justify-between items-center">
+          <span className="text-sm text-gray-400">{(completed || 0).toFixed(1)}% Complete</span>
+          <Link href={{ pathname: '/playlists/player', query: { playlistId: playlistId } }}>
+            <button className="flex items-center space-x-1 bg-purple-500 hover:bg-purple-600 text-black font-medium px-3 py-1 rounded-full transition-colors">
+              <Play className="w-4 h-4" />
+              {
+                completed === 0 ? (
+                  <span>Start Now</span>
+                ) : completed < 100 ? (
+                  <span>Continue</span>
+                ) : (
+                  <span>Completed</span>
+                )
+              }
+            </button>
+          </Link>
+          </div>
+        </div>
+      </div>
+      
+      <div className="absolute inset-0 pointer-events-none border border-purple-500/20 rounded-xl" />
+    </div>
   );
 }

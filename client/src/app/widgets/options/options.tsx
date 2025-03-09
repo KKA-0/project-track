@@ -5,8 +5,8 @@ import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const options = [
+  'Edit',
   'Delete',
-//   'Atria',
 ];
 
 const ITEM_HEIGHT = 48;
@@ -51,7 +51,7 @@ export default function Options() {
         }}
       >
         {options.map((option) => (
-          <MenuItem key={option} selected={option === 'Delete'} onClick={handleClose}>
+          <MenuItem key={option} selected={option === 'null'} onClick={handleClose}>
             {option}
           </MenuItem>
         ))}
