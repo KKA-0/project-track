@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { useEffect } from "react";
 import { useAppDispatch } from "./../../../libs/hooks/hooks";
 import { createPlaylist } from "./../../../libs/features/playlists.api";
+import Custom from "./../custom/custom";
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
@@ -167,21 +168,26 @@ export default function FormDialog() {
                       </div>
                     </div>
 
-                    <div className="mt-6 flex justify-end space-x-3">
-                      <button
-                        type="button"
-                        className="inline-flex justify-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 transition-all duration-200"
-                        onClick={handleClose}
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="inline-flex justify-center rounded-lg border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 transition-all duration-200"
-                      >
-                        Create
-                      </button>
-                    </div>
+                      <div className="flex justify-between">
+                        <div className="mt-6 flex justify-end space-x-3">
+                          <Custom/>
+                        </div>
+                        <div className="mt-6 flex justify-end space-x-3">
+                          <button
+                            type="button"
+                            className="inline-flex justify-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 transition-all duration-200"
+                            onClick={handleClose}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="submit"
+                            className="inline-flex justify-center rounded-lg border border-transparent bg-purple-600 px-4 py-2 text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 transition-all duration-200"
+                          >
+                            Create
+                          </button>
+                        </div>
+                      </div>
                   </form>
                 </Dialog.Panel>
               </Transition.Child>

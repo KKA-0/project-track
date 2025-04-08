@@ -3,7 +3,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { MoreVertical, Play } from 'lucide-react';
 
-export default function Cards({ imageUri, title, info, completed, playlistId, channelName }: {imageUri: string, title: string, info: string, playlistId: string, completed: number, channelName: string}) {
+export default function Cards({ imageUri, title, info, completed, playlistId, channelName, duration, totalVideos }: {imageUri: string, title: string, info: string, playlistId: string, completed: number, channelName: string, duration: string, totalVideos: number}) {
   function ProgressBar({ value }: { value: number }) {
     return (
       <div className="relative w-full h-2 bg-indigo-700 rounded-full overflow-hidden">
@@ -31,6 +31,10 @@ export default function Cards({ imageUri, title, info, completed, playlistId, ch
         <p className="text-gray-400 text-sm">
           {info}
         </p>
+        <div className="flex items-center space-x-2 text-purple-500">
+          <span className="text-sm text-gray-400">{duration.split(':').slice(0, 2).join('h ') + 'm'}</span>
+          <span className="text-sm text-gray-400">{totalVideos} Videos</span>
+        </div>
         
         <div className="flex items-center space-x-2 text-purple-500">
           <span className="text-sm font-medium">{channelName}</span>

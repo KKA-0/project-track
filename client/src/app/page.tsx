@@ -10,6 +10,7 @@ import CTA from './widgets/CTA'
 import Footer from './widgets/Footer'
 import BackgroundAnimation from './widgets/BackgroundAnimation'
 import Subscription from './widgets/Subscription'
+import { signIn } from "next-auth/react";
 
 const page = () => {
   
@@ -27,6 +28,7 @@ const page = () => {
           <CTA />
         </main>
         <Footer />
+        <button onClick={() => signIn('google')}>Sign In</button>
       </div>
     </>
   )

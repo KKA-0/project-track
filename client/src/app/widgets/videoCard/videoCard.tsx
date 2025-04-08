@@ -74,6 +74,9 @@ export default function VideoCard({ videoData, section }: {videoData: any, secti
                 color="success" 
               />
               <Stack spacing={2} direction="row" alignItems="center">
+                <div className='h-fit w-fit p-1 bg-gray-200 rounded'>
+                  <span>{videoData[key].duration}</span>
+                </div>
                 <Typography
                   fontSize={15}
                   noWrap

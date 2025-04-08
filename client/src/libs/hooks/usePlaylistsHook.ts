@@ -21,6 +21,14 @@ interface Video {
     info: string;
     playlistId: string;
     channelName: string;
+    totalDuration: {
+      formatted: string;
+      hours: number;
+      minutes: number;
+      seconds: number;
+      totalSeconds: number;
+    };
+    totalVideos: number;
     sections: { [sectionName: string]: Section };
   }
   

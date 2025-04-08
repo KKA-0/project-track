@@ -29,6 +29,8 @@ export default function Playlists() {
                 completed={playlists[key].completed} 
                 playlistId={playlists[key].playlistId} 
                 channelName={playlists[key].channelName}
+                duration={playlists[key].totalDuration.formatted}
+                totalVideos={playlists[key].totalVideos}
               />
             ))
           : null

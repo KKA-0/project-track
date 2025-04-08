@@ -18,6 +18,7 @@ function Navbar() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [userMenuOpen, setUserMenuOpen] = React.useState(false);
+  const [isUser, setIsUser] = React.useState(true);
   
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const toggleUserMenu = () => setUserMenuOpen(!userMenuOpen);
@@ -74,6 +75,16 @@ function Navbar() {
             )}
 
             {/* User menu */}
+
+          {isUser ? (
+            <Link href="/auth">
+              <button
+                className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-full transition duration-200 ease-in-out"
+              >
+                Login to Sync
+              </button>
+            </Link>
+          ) : (
             <div className="relative ml-3" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={toggleUserMenu}
@@ -103,6 +114,7 @@ function Navbar() {
                 </div>
               )}
             </div>
+          )}
           </div>
 
           {/* Mobile menu button */}

@@ -16,6 +16,8 @@ const initialState: PlaylistSlice = {
 
 interface Video {
     link: string;
+    duration: string;
+    durationRaw: number;
     done: number;
 }
 
@@ -29,6 +31,14 @@ interface Playlist {
     completed: number;
     playlistId: string;
     channelName: string;
+    totalDuration: {
+        formatted: string;
+        hours: number;
+        minutes: number;
+        seconds: number;
+        totalSeconds: number;
+    };
+    totalVideos: number;
     sections: {
         [sectionTitle: string]: Section;
     };
@@ -115,6 +125,9 @@ export const playlistSlice = createSlice({
                     playlistId: string;
                   }
                 const playlistId = action.payload.playlistId;
+                if(!playlistId){
+                    return;
+                }
                 const playlistData = get('playlists') as Playlist || {};
                 playlistData[playlistId] = action.payload;
                 set('playlists', playlistData);
