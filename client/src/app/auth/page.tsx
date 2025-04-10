@@ -7,9 +7,8 @@ import Navbar from '@/app/widgets/navbar/navbar';
 import { useGoogleLogin } from '@react-oauth/google';
 import { usePost } from '@/utils/api/apiService';
 
-export default function page() {
+export default function Page() {
   const post = usePost('auth/google');
-
 
   const [isLoading, setisLoading] = useState(false)
 
