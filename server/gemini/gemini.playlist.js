@@ -10,20 +10,34 @@ const textsi_1 = {text: `Given a JSON object with a list of videos (each having 
   "completed": 0,
   "playlistId": "unique_playlist_id",
   "channelName": "channnelName",
+  "totalDuration": {
+    "formatted": "00:00:00",
+    "hours": 0,
+    "minutes": 0,
+    "seconds": 0,
+    "totalSeconds": 0
+  },
+  "totalVideos": 0,
   "sections": {
     "React Tutorials": {
       "React Tutorial: Introduction to React": {
         "link": "dfxrdoEQe00",
+        "duration": "00:00:00",
+        "durationRaw": 0,
         "done": 0
       },
       "React State Management with Redux": {
         "link": "gywke3XiNC0",
+        "duration": "00:00:00",
+        "durationRaw": 0,
         "done": 0
       }
     },
     "Node.js Tutorials": {
       "Node.js Tutorial: Getting Started": {
         "link": "gywke3XiNC0",
+        "duration": "00:00:00",
+        "durationRaw": 0,
         "done": 0
       }
     }
@@ -37,7 +51,7 @@ const model = 'gemini-1.5-pro-001';
 
 
 // Resolve the path to the service account file dynamically
-const serviceAccountPath = path.join(__dirname, 'project-tracking-432716-7e4887d6d1aa.json');
+const serviceAccountPath = path.join(__dirname, 'sample.json');
 
 // Set the environment variable to the service account file's location
 process.env.GOOGLE_APPLICATION_CREDENTIALS = serviceAccountPath;
