@@ -54,7 +54,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   borderTop: '1px solid rgba(0, 0, 0, .125)',
 }));
 
-export default function CustomizedAccordions() {
+export default function CustomizedAccordions({ currentlyPlaying }: {currentlyPlaying: string}) {
   const [expanded, setExpanded] = React.useState<string | false>('panel1');
 
   const handleChange =
@@ -78,7 +78,7 @@ export default function CustomizedAccordions() {
                   <Typography>{key}</Typography>
                 </AccordionSummary>
                 <AccordionDetails sx={{maxHeight: "80vh", minHeight: "fit-content", overflowY: "scroll"}}>
-                  <VideoCard videoData={StatePlaylists[key]} section={key}/>
+                  <VideoCard videoData={StatePlaylists[key]} section={key} currentlyPlaying={currentlyPlaying}/>
                 </AccordionDetails>
               </Accordion>
               )

@@ -11,6 +11,7 @@ import { useAppDispatch } from "./../../../libs/hooks/hooks"
 import { videoStatus, currentVideo } from "./../../../libs/features/playlists.slice"
 import { useSearchParams } from "next/navigation";
 import { Tooltip } from 'react-tooltip'
+import { IoMdPlayCircle } from "react-icons/io";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -24,7 +25,7 @@ const Item = styled(Paper)(({ theme }) => ({
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 
-export default function VideoCard({ videoData, section }: {videoData: any, section: any}) {
+export default function VideoCard({ videoData, section, currentlyPlaying }: {videoData: any, section: any, currentlyPlaying: string}) {
   const dispatch = useAppDispatch()
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
@@ -46,13 +47,13 @@ export default function VideoCard({ videoData, section }: {videoData: any, secti
         (videoData) ? 
         Object.keys(videoData).map(key => (
           <Box
-            key={key} 
-            data-tooltip-id={playlistId} data-tooltip-content={key}
-            sx={{
-              flexGrow: 1,
-              overflow: 'hidden',
-              px: 1
-            }}
+          key={key} 
+          data-tooltip-id={playlistId} data-tooltip-content={key}
+          sx={{
+            flexGrow: 1,
+            overflow: 'hidden',
+            px: 1
+          }}
           >
             <Item
               onClick={() => handleVideoPlayer(videoData[key].link)}
@@ -62,11 +63,15 @@ export default function VideoCard({ videoData, section }: {videoData: any, secti
                 display: 'flex',
                 flexDirection: 'row',
                 cursor: 'pointer',
-              ':hover': {
-                backgroundColor: '#dfdfdf', // or use a specific shade like 'grey.300'
-              },
+                ':hover': {
+                  backgroundColor: '#dfdfdf', // or use a specific shade like 'grey.300'
+                },
               }}
-            >
+            > 
+              {
+                (videoData[key].link === currentlyPlaying) ? <IoMdPlayCircle style={{minWidth: '40px', minHeight: '40px', color: 'blueviolet'}}/> : null
+              }
+              
               <Checkbox 
                 {...label} 
                 onChange={(e) => handleCheckbox(key, e.target.checked)} 

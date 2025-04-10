@@ -59,7 +59,7 @@ export default function Page() {
           />
         </section>
         <section className='h-screen w-1/3 bg-black'>
-          <CustomizedAccordions />
+          <CustomizedAccordions currentlyPlaying={video}/>
         </section>
       </div>
     </>
