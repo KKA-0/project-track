@@ -20,12 +20,7 @@ export default function Page() {
       // console.log(credentialResponse);
       setisLoading(false)
       post.mutate({ google_auth_token: credentialResponse.access_token }, { onSuccess: (data: any) => {
-        Cookies.set('access_token', data.access_token, {
-          path: '/',
-          maxAge: 60 * 60 * 24 * 365, // in seconds
-          sameSite: 'Strict',
-          secure: true,
-        });
+        Cookies.set('access_token', data.access_token);
         router.push('/playlists');
       } }); 
     },

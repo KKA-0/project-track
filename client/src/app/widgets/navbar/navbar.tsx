@@ -43,10 +43,10 @@ function Navbar() {
   //   return () => document.removeEventListener('mousedown', handleClickOutside);
   // }, []);
 
-  // useEffect(() => {
-  //   const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('access_token='));
-  //   setIsUser(!token);
-  // }, []);
+  useEffect(() => {
+    const token = Cookies.get('access_token');
+    setIsUser(!token);
+  }, []);
 
   const handleLogout = () => {
     console.log("logout request")
