@@ -5,33 +5,55 @@ import { useSearchParams } from "next/navigation";
 import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import { Menu, X, ChevronDown, Zap, User } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAppDispatch } from "@/libs/hooks/hooks";
+// import {getPlaylist} from "@/libs/features/playlists.slice"
 
 const pages = ['Products', 'Open Source', 'Developers'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
 function Navbar() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const StatePlaylists = useSelector((state: any) => state.store.playlists);
 
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
-  const playlistId = params.playlistId;
+  const playlistId = params.playlistId as string;
 
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [userMenuOpen, setUserMenuOpen] = React.useState(false);
   const [isUser, setIsUser] = React.useState(true);
   
+  const menuRef = useRef<HTMLDivElement>(null);
+  
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const toggleUserMenu = () => setUserMenuOpen(!userMenuOpen);
   
-  // Close menus when clicking outside
-  React.useEffect(() => {
-    const handleClickOutside = () => {
-      setUserMenuOpen(false);
-    };
+  // Close user menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    }
     
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('access_token='));
+    setIsUser(!token);
+  }, []);
+
+  const handleLogout = () => {
+    console.log("logout request")
+    document.cookie = 'access_token=; Path=/; Max-Age=0; SameSite=Strict; Secure;';
+    setIsUser(true);
+    router.push('/auth');
+    // dispatch(getPlaylist({}))
+  };
 
   return (
     <nav className="bg-black bg-opacity-90 border-b border-cyan-900/30 backdrop-blur-sm relative z-50">
@@ -69,52 +91,51 @@ function Navbar() {
                   />
                 </div>
                 <div className="text-xs text-cyan-400 mt-1 text-right">
-                {(StatePlaylists[playlistId]?.completed || 0).toFixed(1)}%
+                {(StatePlaylists[playlistId]?.completed || 0) }%
                 </div>
               </div>
             )}
 
             {/* User menu */}
-
-          {isUser ? (
-            <Link href="/auth">
-              <button
-                className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-full transition duration-200 ease-in-out"
-              >
-                Login to Sync
-              </button>
-            </Link>
-          ) : (
-            <div className="relative ml-3" onClick={(e) => e.stopPropagation()}>
-              <button
-                onClick={toggleUserMenu}
-                className="flex items-center text-sm focus:outline-none"
-              >
-                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 p-0.5">
-
-                  <div className="h-full w-full rounded-full bg-gray-900 flex items-center justify-center">
-                    <User className="h-4 w-4 text-purple-400" />
+            {isUser ? (
+              <Link href="/auth">
+                <button
+                  className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-full transition duration-200 ease-in-out"
+                >
+                  Login to Sync
+                </button>
+              </Link>
+            ) : (
+              <div className="relative ml-3" ref={menuRef}>
+                <button
+                  onClick={toggleUserMenu}
+                  className="flex items-center text-sm focus:outline-none"
+                >
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 p-0.5">
+                    <div className="h-full w-full rounded-full bg-gray-900 flex items-center justify-center">
+                      <User className="h-4 w-4 text-purple-400" />
+                    </div>
                   </div>
-                </div>
-                <ChevronDown className={`ml-1 h-4 w-4 text-gray-400 transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`} />
-              </button>
+                  <ChevronDown className={`ml-1 h-4 w-4 text-gray-400 transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`} />
+                </button>
 
-              {/* User dropdown menu */}
-              {userMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-gray-900 border border-cyan-900/50 rounded-md shadow-lg py-1 z-50 backdrop-blur-sm">
-                  {settings.map((setting) => (
-                    <Link
-                      key={setting}
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-cyan-900/20 hover:text-cyan-400"
-                    >
-                      {setting}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+                {/* User dropdown menu */}
+                {userMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-gray-900 border border-cyan-900/50 rounded-md shadow-lg py-1 z-50 backdrop-blur-sm">
+                    {settings.map((setting) => (
+                      <Link
+                        key={setting}
+                        href="#"
+                        onClick={setting === "Logout" ? handleLogout : undefined}
+                        className="block px-4 py-2 text-sm text-gray-300 hover:bg-cyan-900/20 hover:text-cyan-400"
+                      >
+                        {setting}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -175,6 +196,7 @@ function Navbar() {
                 <Link
                   key={setting}
                   href="#"
+                  onClick={setting === "Logout" ? handleLogout : undefined}
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-cyan-900/20 hover:text-cyan-400"
                 >
                   {setting}

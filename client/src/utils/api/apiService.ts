@@ -2,12 +2,13 @@ import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 const BASE_URL = process.env.NEXT_PUBLIC_HOST; // Ensure this is set in .env.local
-
+const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('access_token='))?.split('=')[1] || null;
 // Create an Axios instance
 const api = axios.create({
   baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
+    Authorization: token ? `Bearer ${token}` : undefined,
   },
 });
 
@@ -28,6 +29,10 @@ export const useFetch = <T>(key: string, url: string, options = {}) => {
   return useQuery<T>({
     queryKey: [key],
     queryFn: () => fetchData(url),
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    refetchInterval: false,
+    refetchIntervalInBackground: false,
     ...options,
   });
 };

@@ -17,18 +17,18 @@ interface Video {
     key: string;
     completed: number;
     title: string;
-    imageUri: string;
+    imageuri: string;
     info: string;
-    playlistId: string;
-    channelName: string;
-    totalDuration: {
+    playlistid: string;
+    channelname: string;
+    totalduration: {
       formatted: string;
       hours: number;
       minutes: number;
       seconds: number;
       totalSeconds: number;
     };
-    totalVideos: number;
+    totalvideos: number;
     sections: { [sectionName: string]: Section };
   }
   

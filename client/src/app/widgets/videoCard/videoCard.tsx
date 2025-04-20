@@ -12,6 +12,8 @@ import { videoStatus, currentVideo } from "./../../../libs/features/playlists.sl
 import { useSearchParams } from "next/navigation";
 import { Tooltip } from 'react-tooltip'
 import { IoMdPlayCircle } from "react-icons/io";
+import { usePost } from "@/utils/api/apiService";
+import { set } from 'local-storage';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -30,6 +32,7 @@ export default function VideoCard({ videoData, section, currentlyPlaying }: {vid
   const searchParams = useSearchParams();
   const params = Object.fromEntries(searchParams.entries());
   const playlistId = params?.playlistId;
+  const post = usePost('playlists/video/status');
 
   const handleVideoPlayer = ( link : { link: string }) => {
     dispatch(currentVideo( link ))
@@ -37,8 +40,15 @@ export default function VideoCard({ videoData, section, currentlyPlaying }: {vid
 
   const handleCheckbox = (videoTitle: any, checked: boolean) => {
     // console.log(videoTitle, checked, playlistId, section)
-    dispatch(videoStatus({ videoTitle, checked, playlistId, section }));
-  };  
+  dispatch(videoStatus({ videoTitle, checked, playlistId, section }));
+  const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('access_token='));
+  if(token){
+    post.mutate({ playlistId, section, videoTitle, checked }, { onSuccess: (data: any) => {
+      console.log("YOo bro")
+    } }); 
+  }
+
+};
   
   return (
     <>

@@ -6,17 +6,22 @@ import { FaGithub } from "react-icons/fa";
 import Navbar from '@/app/widgets/navbar/navbar';
 import { useGoogleLogin } from '@react-oauth/google';
 import { usePost } from '@/utils/api/apiService';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
-  const post = usePost('auth/google');
+  const router = useRouter();
+  const post = usePost('users/google/login');
 
   const [isLoading, setisLoading] = useState(false)
 
   const googleLogin = useGoogleLogin({
     onSuccess: credentialResponse => {
-      console.log(credentialResponse);
+      // console.log(credentialResponse);
       setisLoading(false)
-      post.mutate(credentialResponse); 
+      post.mutate({ google_auth_token: credentialResponse.access_token }, { onSuccess: (data: any) => {
+        document.cookie = `access_token=${data.access_token}; Path=/; Max-Age=31536000; SameSite=Strict; Secure;`
+        router.push('/playlists');
+      } }); 
     },
     onError: error => {
       console.log(error);

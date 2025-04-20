@@ -10,7 +10,7 @@ import { useSearchParams } from "next/navigation";
 export default function Page() {
   const [video, setVideo] = useState<string>('');
   const videoPlayer = useSelector((state: any) => state.store.videoPlayer);
-  usePlaylists();
+  // usePlaylists();
 
   const src = `https://www.youtube.com/embed/${video}?rel=0`;
   const title = "YouTube video player";

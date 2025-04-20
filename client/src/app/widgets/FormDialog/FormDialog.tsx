@@ -9,8 +9,11 @@ import { useEffect } from "react";
 import { useAppDispatch } from "./../../../libs/hooks/hooks";
 import { createPlaylist } from "./../../../libs/features/playlists.api";
 import Custom from "./../custom/custom";
+import { usePost } from '@/utils/api/apiService';
+import ls, {get,set} from "local-storage";
 
 export default function FormDialog() {
+  const post = usePost('playlists');
   const [open, setOpen] = React.useState(false);
   const [backdropState, setBackdropState] = React.useState(false);
   const [playlistVideos, setPlaylistVideos] = React.useState("");
@@ -52,10 +55,20 @@ export default function FormDialog() {
           const listParam = urlObj.searchParams.get("list");
 
           if (listParam) {
-            console.log("Extracted list ID:", listParam);
             handleClose();
             handleOpenBackdrop();
-            dispatch(createPlaylist({ url: listParam }));
+            post.mutate({ playlistId: listParam }, { onSuccess: (data: any) => {
+              console.log(data);
+              interface Playlist {
+                [key: string]: any; // Allows dynamic keys
+                playlistId: string;
+              }
+              const playlistData = get('playlists') as Playlist || {};
+              const playlistId = data.playlistid;
+              playlistData[playlistId] = data;
+              set('playlists', playlistData);
+              handleCloseBackdrop()
+            } });
             setPlaylistVideos(url);
           } else {
             console.error("No 'list' parameter found in the URL");
