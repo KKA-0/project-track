@@ -1,6 +1,8 @@
-import { Controller, Body, Post } from '@nestjs/common';
+import { Controller, Body, Post, Get, Param, Headers } from '@nestjs/common';
 const generateContent = require('./../../gemini/gemini.playlist.js');
 import axios from 'axios';
+import { PlaylistsService } from './playlists.service'
+import { jwtDecode } from "jwt-decode";
 
 // Helper function to convert ISO 8601 duration format to seconds
 function parseISO8601Duration(duration) {
@@ -36,9 +38,13 @@ function formatPlaylistData(items, videoDurations = {}) {
 
 @Controller('playlists')
 export class PlaylistsController {
+  constructor(
+    private readonly playlistsService: PlaylistsService
+  ) {}
+
   @Post()
-  async getPlaylist(@Body() input: any) {
-    console.log(input);
+  async getPlaylist(@Body() input: { playlistId: string }, @Headers('Authorization') token: string) {
+    
     const { playlistId } = input;
     if (!playlistId) {
       return { error: "Playlist ID is required." };
@@ -94,10 +100,54 @@ export class PlaylistsController {
       };
         const GenPlaylistData = await generateContent(playlistResponse, playlistId)
         // return playlistData;
-        return GenPlaylistData
+        if(token !== undefined){
+          const TokenParts = token.split('Bearer ')
+          token = TokenParts[1]
+          const decodedToken = jwtDecode(token) as { id: number }
+          return await this.playlistsService.createPlaylist(playlistId, GenPlaylistData.title, GenPlaylistData, decodedToken.id)
+        }
+        return GenPlaylistData;
         } catch (err) {
             console.error("Error fetching playlist data:", err);
             return { error: "Failed to fetch playlist data." };
         }
     }
+
+  @Post('create')
+  async createPlaylist(@Body() body: { playlist_id: string, playlist_name: string, playlist_json: any, user_id: number }) {
+    return await this.playlistsService.createPlaylist(body.playlist_id, body.playlist_name, body.playlist_json, body.user_id);
+  }
+
+  @Get('list')
+  async listUserPlaylists(@Headers('Authorization') token: string) {
+    if(token !== undefined){
+      const TokenParts = token.split('Bearer ')
+      token = TokenParts[1]
+      const decodedToken = jwtDecode(token) as { id: number }
+      return await this.playlistsService.findByUserId(decodedToken.id)
+    }
+    return "Something went wrong!";
+  }
+  
+  @Get('playlist/:id')
+  async getPlaylistById(@Param('id') id: string, @Headers('Authorization') token: string) {
+    if(token !== undefined){
+      const TokenParts = token.split('Bearer ')
+      token = TokenParts[1]
+      const decodedToken = jwtDecode(token) as { id: number }
+      return this.playlistsService.findOne(id, decodedToken.id);
+    }
+    return "Something went wrong!";
+  }
+  
+  @Post('video/status')
+  async updateVideoStatus(@Body() body: { playlistId: string, section: string, videoTitle: string, checked: boolean }, @Headers('Authorization') token: string) {
+    if(token !== undefined){
+      const TokenParts = token.split('Bearer ')
+      token = TokenParts[1]
+      const decodedToken = jwtDecode(token) as { id: number }
+      return await this.playlistsService.updateVideoStatus(body,decodedToken.id);
+    }
+    return "Something went wrong!";
+  }
 }

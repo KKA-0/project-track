@@ -8,16 +8,16 @@ const textsi_1 = {text: `Given a JSON object with a list of videos (each having 
   "title": "Playlist Name",
   "info": "Brief summary in 15 words.",
   "completed": 0,
-  "playlistId": "unique_playlist_id",
-  "channelName": "channnelName",
-  "totalDuration": {
+  "playlistid": "unique_playlist_id",
+  "channelname": "channnelName",
+  "totalduration": {
     "formatted": "00:00:00",
     "hours": 0,
     "minutes": 0,
     "seconds": 0,
     "totalSeconds": 0
   },
-  "totalVideos": 0,
+  "totalvideos": 0,
   "sections": {
     "React Tutorials": {
       "React Tutorial: Introduction to React": {

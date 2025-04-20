@@ -2,7 +2,8 @@
 /dist
 /node_modules
 /build
-
+/gemini/sample.json
+/gemini/project-tracking-432716-7e4887d6d1aa.json
 # Logs
 logs
 *.log
