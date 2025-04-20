@@ -14,6 +14,7 @@ import { Tooltip } from 'react-tooltip'
 import { IoMdPlayCircle } from "react-icons/io";
 import { usePost } from "@/utils/api/apiService";
 import { set } from 'local-storage';
+import Cookies from 'js-cookie';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -41,7 +42,7 @@ export default function VideoCard({ videoData, section, currentlyPlaying }: {vid
   const handleCheckbox = (videoTitle: any, checked: boolean) => {
     // console.log(videoTitle, checked, playlistId, section)
   dispatch(videoStatus({ videoTitle, checked, playlistId, section }));
-  const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('access_token='));
+  const token = Cookies.get('access_token') || null;
   if(token){
     post.mutate({ playlistId, section, videoTitle, checked }, { onSuccess: (data: any) => {
       console.log("YOo bro")

@@ -7,6 +7,7 @@ import Navbar from '@/app/widgets/navbar/navbar';
 import { useGoogleLogin } from '@react-oauth/google';
 import { usePost } from '@/utils/api/apiService';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export default function Page() {
   const router = useRouter();
@@ -19,7 +20,12 @@ export default function Page() {
       // console.log(credentialResponse);
       setisLoading(false)
       post.mutate({ google_auth_token: credentialResponse.access_token }, { onSuccess: (data: any) => {
-        document.cookie = `access_token=${data.access_token}; Path=/; Max-Age=31536000; SameSite=Strict; Secure;`
+        Cookies.set('access_token', data.access_token, {
+          path: '/',
+          maxAge: 60 * 60 * 24 * 365, // in seconds
+          sameSite: 'Strict',
+          secure: true,
+        });
         router.push('/playlists');
       } }); 
     },

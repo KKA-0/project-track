@@ -9,6 +9,7 @@ import { usePlaylists } from "@/libs/hooks/usePlaylistsHook"
 import { getPlaylist } from "@/libs/features/playlists.slice"
 import { useAppDispatch } from "@/libs/hooks/hooks";
 import { useSelector } from 'react-redux'
+import Cookies from 'js-cookie';
 
 interface Playlist {
   playlistid: string;
@@ -39,7 +40,7 @@ export default function Playlists(): React.ReactElement {
   
   // Check user authentication status
   useEffect(() => {
-    const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('access_token='));
+    const token = Cookies.get('access_token');
     if(token) {
       setIsUser(true);
     }

@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import Cookies from 'js-cookie';
 
 const BASE_URL = process.env.NEXT_PUBLIC_HOST; // Ensure this is set in .env.local
-const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('access_token='))?.split('=')[1] || null;
+const token = Cookies.get('access_token') || null;
 // Create an Axios instance
 const api = axios.create({
   baseURL: BASE_URL,

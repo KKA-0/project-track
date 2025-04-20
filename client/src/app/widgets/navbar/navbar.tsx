@@ -8,6 +8,7 @@ import { Menu, X, ChevronDown, Zap, User } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from "@/libs/hooks/hooks";
+import Cookies from 'js-cookie';
 // import {getPlaylist} from "@/libs/features/playlists.slice"
 
 const pages = ['Products', 'Open Source', 'Developers'];
@@ -31,25 +32,29 @@ function Navbar() {
   const toggleUserMenu = () => setUserMenuOpen(!userMenuOpen);
   
   // Close user menu when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setUserMenuOpen(false);
-      }
-    }
+  // useEffect(() => {
+  //   function handleClickOutside(event: MouseEvent) {
+  //     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+  //       setUserMenuOpen(false);
+  //     }
+  //   }
     
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => document.removeEventListener('mousedown', handleClickOutside);
+  // }, []);
 
-  useEffect(() => {
-    const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('access_token='));
-    setIsUser(!token);
-  }, []);
+  // useEffect(() => {
+  //   const token = document.cookie.split(';').find(cookie => cookie.trim().startsWith('access_token='));
+  //   setIsUser(!token);
+  // }, []);
 
   const handleLogout = () => {
     console.log("logout request")
-    document.cookie = 'access_token=; Path=/; Max-Age=0; SameSite=Strict; Secure;';
+    Cookies.remove('access_token', {
+      path: '/',
+      sameSite: 'Strict',
+      secure: true,
+    });
     setIsUser(true);
     router.push('/auth');
     // dispatch(getPlaylist({}))
