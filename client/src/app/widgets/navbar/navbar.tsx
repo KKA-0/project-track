@@ -25,12 +25,12 @@ function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [userMenuOpen, setUserMenuOpen] = React.useState(false);
   const [isUser, setIsUser] = React.useState(true);
-  
+
   const menuRef = useRef<HTMLDivElement>(null);
-  
+
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const toggleUserMenu = () => setUserMenuOpen(!userMenuOpen);
-  
+
   // Close user menu when clicking outside
   // useEffect(() => {
   //   function handleClickOutside(event: MouseEvent) {
@@ -38,7 +38,7 @@ function Navbar() {
   //       setUserMenuOpen(false);
   //     }
   //   }
-    
+
   //   document.addEventListener('mousedown', handleClickOutside);
   //   return () => document.removeEventListener('mousedown', handleClickOutside);
   // }, []);
@@ -77,26 +77,26 @@ function Navbar() {
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {pages.map((page) => (
-              <Link 
-                key={page} 
-                href="#" 
+              <Link
+                key={page}
+                href="#"
                 className="text-gray-300 hover:text-cyan-400 px-3 py-2 text-sm font-medium tracking-wide transition-colors duration-200 ease-in-out"
               >
                 {page}
               </Link>
             ))}
-            
+
             {/* Progress bar */}
             {playlistId && (
               <div className="mx-4 w-40">
                 <div className="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-500 ease-out"
                     style={{ width: `${StatePlaylists[playlistId]?.completed || 0}%` }}
                   />
                 </div>
                 <div className="text-xs text-cyan-400 mt-1 text-right">
-                {(StatePlaylists[playlistId]?.completed || 0) }%
+                  {Number(StatePlaylists[playlistId]?.completed || 0).toFixed(1)}%
                 </div>
               </div>
             )}
@@ -148,14 +148,14 @@ function Navbar() {
             {playlistId && (
               <div className="mr-4 w-20">
                 <div className="h-1 w-full bg-gray-700 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-gradient-to-r from-cyan-400 to-blue-500"
                     style={{ width: `${StatePlaylists[playlistId]?.completed || 0}%` }}
                   />
                 </div>
               </div>
             )}
-            
+
             <button
               onClick={toggleMobileMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none"

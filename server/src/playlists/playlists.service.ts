@@ -47,25 +47,53 @@ export class PlaylistsService {
     }
 
     async updateVideoStatus(
-        body: { playlistId: string; section: string; videoTitle: string; checked: boolean },
+        body: { playlistId: string; section: string; videoTitle: string; checked: boolean; completedState: number },
         user_id: number
     ) {
-        this.playlistsRepository.query(
+        // Log the values for debugging
+        console.log('Updating video status with:', {
+            section: body.section,
+            videoTitle: body.videoTitle,
+            checked: body.checked,
+            completedState: body.completedState,
+            playlistId: body.playlistId,
+            userId: user_id
+        });
+
+        // Execute the update query
+        const result = await this.playlistsRepository.query(
             `UPDATE playlist
              SET playlist_json = jsonb_set(
-               playlist_json,
-               ARRAY['sections', $1, $2, 'done'],
-               to_jsonb($3::int)
+               jsonb_set(
+                 playlist_json,
+                 ARRAY['sections', $1, $2, 'done'],
+                 to_jsonb($3::boolean)
+               ),
+               ARRAY['completed'],
+               to_jsonb($4::numeric)
              )
-             WHERE playlist_id = $4 AND user_id = $5`,
+             WHERE playlist_id = $5 AND user_id = $6
+             RETURNING playlist_json->'completed' as updated_completed`,
             [
-              body.section,
-              body.videoTitle,
-              body.checked ? 1 : 0,
-              body.playlistId,
-              user_id
+                body.section,                  // $1
+                body.videoTitle,               // $2
+                body.checked,                  // $3 - store actual boolean instead of 0/1
+                body.completedState,           // $4 - completed value at root
+                body.playlistId,               // $5
+                user_id                        // $6
             ]
-          );
+        );
+
+        // Log the result for verification
+        console.log('Update result:', result);
+
+        if (!result || result.length === 0) {
+            console.error('No rows were updated. Check if the record exists with the given playlist_id and user_id.');
+            return false;
+        }
+
+        console.log('Updated completed value:', result[0].updated_completed);
+        return true;
     }
 
 

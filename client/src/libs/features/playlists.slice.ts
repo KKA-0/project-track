@@ -2,10 +2,10 @@
 
 import { createSlice, current } from "@reduxjs/toolkit"
 import { createPlaylist } from "./playlists.api"
-import ls, {get,set} from "local-storage";
+import ls, { get, set } from "local-storage";
 
 export interface PlaylistSlice {
-    playlists: any,   
+    playlists: any,
     videoPlayer: string
 }
 
@@ -49,8 +49,8 @@ interface Playlists {
 }
 
 function calculateProgress(playlists: Playlists, playlistId: string) {
-    console.log(playlists, playlistId);
-    
+    // console.log(playlists, playlistId);
+
     if (!playlists || typeof playlists !== 'object') {
         throw new TypeError('The playlists parameter must be a non-null object');
     }
@@ -107,15 +107,18 @@ export const playlistSlice = createSlice({
             state.videoPlayer = action.payload
         },
         videoStatus: (state, action) => {
-            const { videoTitle, checked, playlistId, section }  = action.payload
+            const { videoTitle, checked, playlistId, section, isUser, progress } = action.payload
             // console.log(videoTitle, checked, playlistId, section)
             state.playlists[playlistId].sections[section][videoTitle].done = (checked) ? 1 : 0
             // Update Progress Bar
-            state.playlists[playlistId].completed = calculateProgress(current(state.playlists), playlistId)
-            
-            set('playlists', current(state.playlists));
+            if (isUser) {
+                state.playlists[playlistId].completed = progress
+            } else {
+                state.playlists[playlistId].completed = calculateProgress(current(state.playlists), playlistId)
+                set('playlists', current(state.playlists));
+            }
         },
-        
+
     },
     extraReducers: (builder) => {
         builder
@@ -123,9 +126,9 @@ export const playlistSlice = createSlice({
                 interface Playlist {
                     [key: string]: any; // Allows dynamic keys
                     playlistId: string;
-                  }
+                }
                 const playlistId = action.payload.playlistId;
-                if(!playlistId){
+                if (!playlistId) {
                     return;
                 }
                 const playlistData = get('playlists') as Playlist || {};
@@ -134,7 +137,7 @@ export const playlistSlice = createSlice({
                 state.playlists = playlistData
             })
     }
-}) 
+})
 
 
 export const { getPlaylist, addPlaylist, removePlaylist, editPlaylist, currentVideo, videoStatus } = playlistSlice.actions;

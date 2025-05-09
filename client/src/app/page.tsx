@@ -13,7 +13,7 @@ import Subscription from './widgets/Subscription'
 import { signIn } from "next-auth/react";
 
 const page = () => {
-  
+
   return (
     <>
       <div className="min-h-screen bg-black text-gray-100 overflow-hidden relative">
@@ -28,7 +28,6 @@ const page = () => {
           <CTA />
         </main>
         <Footer />
-        <button onClick={() => signIn('google')}>Sign In</button>
       </div>
     </>
   )
