@@ -56,7 +56,7 @@ function Navbar() {
       secure: true,
     });
     setIsUser(true);
-    router.push('/auth');
+    window.location.reload();
     // dispatch(getPlaylist({}))
   };
 

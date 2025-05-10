@@ -19,10 +19,12 @@ export default function Page() {
     onSuccess: credentialResponse => {
       // console.log(credentialResponse);
       setisLoading(false)
-      post.mutate({ google_auth_token: credentialResponse.access_token }, { onSuccess: (data: any) => {
-        Cookies.set('access_token', data.access_token);
-        router.push('/playlists');
-      } }); 
+      post.mutate({ google_auth_token: credentialResponse.access_token }, {
+        onSuccess: (data: any) => {
+          Cookies.set('access_token', data.access_token);
+          window.location.href = '/playlists';
+        }
+      });
     },
     onError: error => {
       console.log(error);

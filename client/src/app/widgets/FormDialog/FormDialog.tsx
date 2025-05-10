@@ -73,6 +73,7 @@ export default function FormDialog() {
                   set('playlists', playlistData);
                 }
                 handleCloseBackdrop()
+                window.location.reload();
               }
             });
             setPlaylistVideos(url);
