@@ -38,9 +38,9 @@ jobs:
       - name: SSH into server and deploy
         run: |
           ssh -i ~/.ssh/id_rsa "${{ secrets.DEPLOYER_USER }}" << 'EOF'
-            cd ${{ variables.BACKEND_PATH }}
+            cd $BACKEND_PATH
             git pull
             npm run build
             pm2 remove 0 || true
-            ${{ variables.START_CMD }}
+            $START_CMD
           EOF
