@@ -5,43 +5,38 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-
 jobs:
   checkout:
     runs-on: ubuntu-latest
-    environment:  Pre-Prod
-    outputs:
-      ssh-key: ${{ steps.set-key.outputs.ssh-key }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Save SSH Key to Output
-        id: set-key
-        run: echo "ssh-key=${{ secrets.SSH_PRIVATE_KEY }}" >> $GITHUB_OUTPUT
-
-
 
   prepare:
     runs-on: ubuntu-latest
     needs: checkout
+    environment: Pre-Prod     # <-- must exactly match your Environment name
     steps:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
+          # write your private key directly from the secret
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          # add the server to known_hosts
           ssh-keyscan "${{ secrets.SERVER_IP }}" >> ~/.ssh/known_hosts
 
   deploy:
     runs-on: ubuntu-latest
     needs: prepare
+    environment: pre-prod     # <-- same environment here
     steps:
       - name: SSH into server and deploy
         run: |
-          ssh -i ~/.ssh/id_rsa "${{ secrets.DEPLOYER_USER }}" << 'EOF'
-            cd $BACKEND_PATH
+          ssh -i ~/.ssh/id_rsa "${{ secrets.DEPLOYER_USER }}"@"${{ secrets.SERVER_IP }}" << EOF
+            cd "${{ vars.BACKEND_PATH }}"
             git pull
             npm run build
             pm2 remove 0 || true
-            $START_CMD
+            ${{ vars.START_CMD }}
           EOF
