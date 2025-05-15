@@ -36,6 +36,7 @@ jobs:
           ssh -i ~/.ssh/id_rsa "${{ secrets.DEPLOYER_USER }}"@"${{ secrets.SERVER_IP }}" << EOF
             cd "${{ vars.BACKEND_PATH }}"
             git pull
+            npm i 
             npm run build
             pm2 remove 0 || true
             ${{ vars.START_CMD }}
