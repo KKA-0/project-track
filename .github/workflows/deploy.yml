@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: SSH into server and deploy
         run: |
-          ssh -i ~/.ssh/id_rsa "${{ secrets.DEPLOYER_USER }}"@"${{ secrets.SERVER_IP }}" << EOF
+          ssh -i ~/.ssh/id_rsa deployer@68.183.87.239 << EOF
             cd "${{ vars.BACKEND_PATH }}"
             git pull
             npm i 
