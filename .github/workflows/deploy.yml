@@ -36,7 +36,7 @@ jobs:
     steps:
       - name: SSH into server and deploy
         run: |
-          ssh -i ~/.ssh/id_rsa user@your.server.ip << 'EOF'
+          ssh -i ~/.ssh/id_rsa "${{ secrets.DPLOYER_USER }}" << 'EOF'
             cd /home/deployer/project-track/server
             git pull
             npm run build
