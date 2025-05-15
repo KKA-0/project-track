@@ -24,10 +24,22 @@ jobs:
       - name: SSH into server and deploy
         run: |
           ssh -i ~/.ssh/id_rsa deployer@${{ secrets.SERVER_IP }} << EOF
+            # Ensure NVM, Node.js, npm and PM2 are available
+            export NVM_DIR="\$HOME/.nvm"
+            [ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh"
+            
+            # Go to project directory and fix permissions
             cd "${{ vars.BACKEND_PATH }}"
+            sudo chown -R deployer:deployer .
+            
+            # Pull latest changes
             git pull
+            
+            # Install dependencies and build
             npm i 
             npm run build
-            pm2 remove 0 || true
+            
+            # Restart the application
+            pm2 delete 0 || true
             ${{ vars.START_CMD }}
           EOF
