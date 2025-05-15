@@ -9,6 +9,7 @@ on:
 jobs:
   checkout:
     runs-on: ubuntu-latest
+    environment:  Pre-Prod
     outputs:
       ssh-key: ${{ steps.set-key.outputs.ssh-key }}
     steps:
