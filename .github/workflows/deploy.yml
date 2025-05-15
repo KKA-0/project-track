@@ -67,11 +67,6 @@ jobs:
             echo "Navigating to ${{ vars.BACKEND_PATH }}"
             cd "${{ vars.BACKEND_PATH }}" || { echo "Failed to change directory to ${{ vars.BACKEND_PATH }}"; exit 1; }
             
-            # Fix git permissions
-            echo "Fixing repository permissions..."
-            sudo chown -R deployer:deployer .
-            sudo chmod -R u+rwX .
-            
             # Pull latest changes
             echo "Pulling latest changes..."
             git reset --hard HEAD
