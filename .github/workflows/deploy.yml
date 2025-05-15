@@ -17,7 +17,8 @@ jobs:
 
       - name: Save SSH Key to Output
         id: set-key
-        run: echo "::set-output name=ssh-key::${{ secrets.SSH_PRIVATE_KEY }}"
+        run: echo "ssh-key=${{ secrets.SSH_PRIVATE_KEY }}" >> $GITHUB_OUTPUT
+
 
   prepare:
     runs-on: ubuntu-latest
@@ -36,10 +37,10 @@ jobs:
     steps:
       - name: SSH into server and deploy
         run: |
-          ssh -i ~/.ssh/id_rsa "${{ secrets.DPLOYER_USER }}" << 'EOF'
-            cd /home/deployer/project-track/server
+          ssh -i ~/.ssh/id_rsa "${{ secrets.DEPLOYER_USER }}" << 'EOF'
+            cd ${{ variables.BACKEND_PATH }}
             git pull
             npm run build
             pm2 remove 0 || true
-            ${{ secrets.START_CMD }}
+            ${{ variables.START_CMD }}
           EOF
