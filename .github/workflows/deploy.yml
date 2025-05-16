@@ -78,6 +78,7 @@ jobs:
             
             echo "Building application..."
             npm run build
+            npm install pm2 -g
             
             # Restart the application
             echo "Restarting application..."
