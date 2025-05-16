@@ -70,7 +70,6 @@ jobs:
             # Pull latest changes
             echo "Pulling latest changes..."
             git reset --hard HEAD
-            git clean -fd
             git pull
             
             # Install dependencies and build
