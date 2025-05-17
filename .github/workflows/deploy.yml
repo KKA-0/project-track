@@ -1,0 +1,89 @@
+name: Deploy on Main Push/PR
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Pre-Prod     # Environment containing your secrets and variables
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          # write your private key directly from the secret
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          # add the server to known_hosts
+          ssh-keyscan "${{ secrets.SERVER_IP }}" >> ~/.ssh/known_hosts
+      
+      - name: Verify and Install Dependencies
+        run: |
+          ssh -i ~/.ssh/id_rsa deployer@${{ secrets.SERVER_IP }} << EOF
+            echo "=== Setting up environment ==="
+            # Check if Node.js is installed
+            if ! command -v node &> /dev/null; then
+              echo "Node.js not found. Installing NVM and Node.js..."
+              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+              export NVM_DIR="\$HOME/.nvm"
+              [ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh"
+              nvm install --lts
+              nvm use --lts
+            else
+              echo "Node.js is already installed: \$(node -v)"
+            fi
+            
+            # Check if PM2 is installed
+            if ! command -v pm2 &> /dev/null; then
+              echo "PM2 not found. Installing PM2..."
+              npm install -g pm2
+            else
+              echo "PM2 is already installed: \$(pm2 -v)"
+            fi
+            
+            echo "=== Environment setup complete ==="
+          EOF
+      
+      - name: Deploy Application
+        run: |
+          ssh -i ~/.ssh/id_rsa deployer@${{ secrets.SERVER_IP }} << EOF
+            set -e # Exit immediately if a command fails
+            echo "=== Starting deployment ==="
+            
+            # Load NVM to ensure Node.js is available
+            export NVM_DIR="\$HOME/.nvm"
+            [ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh"
+            
+            # Verify tools are available
+            echo "Node version: \$(node -v)"
+            echo "NPM version: \$(npm -v)"
+            echo "PM2 version: \$(pm2 -v)"
+            
+            # Navigate to project directory
+            echo "Navigating to ${{ vars.BACKEND_PATH }}"
+            cd "${{ vars.BACKEND_PATH }}" || { echo "Failed to change directory to ${{ vars.BACKEND_PATH }}"; exit 1; }
+            
+            # Pull latest changes
+            echo "Pulling latest changes..."
+            git reset --hard HEAD
+            git pull
+            
+            # Install dependencies and build
+            echo "Installing dependencies..."
+            npm install
+            
+            echo "Building application..."
+            npm run build
+            npm install pm2 -g
+            
+            # Restart the application
+            echo "Restarting application..."
+            pm2 delete 0 || echo "No existing process to delete"
+            ${{ vars.START_CMD }}
+            
+            echo "=== Deployment completed successfully ==="
+          EOF
