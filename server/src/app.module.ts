@@ -5,6 +5,9 @@ import { PlaylistsModule } from './playlists/playlists.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { TransationsModule } from './transations/transations.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [ConfigModule.forRoot(), PlaylistsModule,
@@ -20,6 +23,9 @@ import { UsersModule } from './users/users.module';
       synchronize: true, // turn off in production!
     }),
     UsersModule,
+    SubscriptionsModule,
+    TransationsModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
