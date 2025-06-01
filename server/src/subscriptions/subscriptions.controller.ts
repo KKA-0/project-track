@@ -10,7 +10,7 @@ export class SubscriptionsController {
         return this.subscriptionsService.createSubscription(body.user_id);
     }
 
-    @Get('webhook')
+    @Post('webhook')
     async webhookSubscription(@Headers('x-pocketsflow-signature') signature: string, @Body() body: any) {
         return this.subscriptionsService.webhookSubscription(signature, body);
     }
