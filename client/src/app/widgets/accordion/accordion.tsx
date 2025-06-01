@@ -10,7 +10,19 @@ interface VideoCardProps {
   videoData: Array<object>
 }
 
-const plan = {
+interface PlanProps {
+  [key: string]: {
+    start_date: string;
+    end_date: string;
+    videos: {
+      [key: string]: {
+        date: string;
+      };
+    };
+  };
+}
+
+const plan: PlanProps = {
   "Introduction to Go": {
     "start_date": "2025-05-25",
     "end_date": "2025-05-28",
