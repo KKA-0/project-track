@@ -125,7 +125,7 @@ export default function VideoCard({
                           <div className="flex items-center justify-center w-12 h-12">
                             <Checkbox
                               checked={videoData[key].done}
-                              onCheckedChange={(checked) => handleCheckbox(key, checked)}
+                              onCheckedChange={(checked: boolean) => handleCheckbox(key, checked)}
                               className="w-5 h-5 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500 data-[state=checked]:text-white border-2 transition-all duration-200 hover:scale-110"
                               onClick={(e) => e.stopPropagation()}
                             />
