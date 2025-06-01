@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { TransationsModule } from './transations/transations.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { PlansModule } from './plans/plans.module';
 
 @Module({
   imports: [ConfigModule.forRoot(), PlaylistsModule,
@@ -26,6 +27,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     SubscriptionsModule,
     TransationsModule,
     NotificationsModule,
+    PlansModule,
   ],
   controllers: [AppController],
   providers: [AppService],

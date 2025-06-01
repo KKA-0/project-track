@@ -33,34 +33,34 @@ export default function Playlists(): React.ReactElement {
   const StatePlaylists = useSelector((state: any) => state.store.playlists)
   const [isUser, setIsUser] = useState<boolean>(false);
   const [playlists, setPlaylists] = useState<PlaylistsMap>({});
-  
+
   // Always call hooks at the top level, regardless of conditions
   const getPlaylists = useFetch<Playlist[]>('playlists', `/playlists/list`);
   const userPlaylists = usePlaylists();
-  
+
   // Check user authentication status
   useEffect(() => {
     const token = Cookies.get('access_token');
-    if(token) {
+    if (token) {
       setIsUser(true);
     }
     if (token) {
       // For authenticated users, use the fetched playlists
       if (getPlaylists.data) {
         setPlaylists({}); // Reset to avoid duplications
-        
+
         const playlistsMap: PlaylistsMap = {};
         if (Array.isArray(getPlaylists.data)) {
           getPlaylists.data.forEach((item: Playlist) => {
             playlistsMap[item.playlistid] = item;
           });
         }
-        
+
         setPlaylists(playlistsMap);
         console.log(playlistsMap);
         dispatch(getPlaylist(playlistsMap));
       }
-      
+
       if (getPlaylists.error) {
         console.error(getPlaylists.error);
       }
@@ -69,15 +69,15 @@ export default function Playlists(): React.ReactElement {
       setPlaylists(userPlaylists);
     }
   }, [getPlaylists.data, getPlaylists.error]);
-  
- 
+
+
   return (
     <>
       <Navbar />
       <div className='w-full h-20 bg-slate-800 flex items-center justify-center'>
         <FormDialog />
       </div>
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap bg-black">
         <Suspense fallback={<div>Loading...</div>}>
           {
             Object.keys(StatePlaylists).length > 0 ?
@@ -93,7 +93,7 @@ export default function Playlists(): React.ReactElement {
                   totalVideos={Number(StatePlaylists[key].totalvideos)}
                 />
               ))
-            : <div className="w-full p-4 text-center">No playlists found</div>
+              : <div className="w-full p-4 text-center">No playlists found</div>
           }
         </Suspense>
       </div>

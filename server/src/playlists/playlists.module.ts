@@ -8,6 +8,7 @@ import { Playlist } from './playlists.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Playlist])],
   controllers: [PlaylistsController],
-  providers: [PlaylistsService]
+  providers: [PlaylistsService],
+  exports: [PlaylistsService]
 })
-export class PlaylistsModule {}
+export class PlaylistsModule { }

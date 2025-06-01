@@ -2,6 +2,54 @@
 import { motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 
+// Global window type declaration
+declare global {
+  interface Window {
+    openPocketsflowCheckout: (options: PocketsflowCheckoutOptions) => void;
+  }
+}
+
+// Product checkout options
+interface PocketsflowCheckoutOptionsProduct {
+  type: "product";
+  productId: string;
+  subdomain: string;
+  embedDivId?: string;
+  isDarkMode?: boolean;
+  metadata?: unknown, // webhook metadata
+  onSuccess?: (data: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    paymentIntentId: string;
+    data: any;
+  }) => void;
+}
+
+// Subscription checkout options
+interface PocketsflowCheckoutOptionsSubscription {
+  type: "subscription";
+  subscriptionId: string;
+  subdomain: string;
+  embedDivId?: string;
+  isDarkMode?: boolean;
+  metadata?: unknown, // webhook metadata
+  onSuccess?: (data: {
+    type: "success";
+    setupIntentId: string;
+    data: any;
+    isSubscription: true;
+    firstName: string;
+    lastName: string;
+    email: string;
+  }) => void;
+}
+
+// Union type for all checkout options
+type PocketsflowCheckoutOptions =
+  | PocketsflowCheckoutOptionsProduct
+  | PocketsflowCheckoutOptionsSubscription;
+
 const plans = [
   {
     name: 'Free',
@@ -45,9 +93,8 @@ export default function Subscription() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.2 }}
-              className={`bg-black p-8 rounded-lg shadow-lg ${
-                plan.highlight ? 'border-2 border-purple-500' : ''
-              }`}
+              className={`bg-black p-8 rounded-lg shadow-lg ${plan.highlight ? 'border-2 border-purple-500' : ''
+                }`}
             >
               <h3 className="text-2xl font-bold mb-4 text-purple-300">{plan.name}</h3>
               <p className="text-4xl font-bold mb-6 text-white">{plan.price}</p>
@@ -59,21 +106,43 @@ export default function Subscription() {
                   </li>
                 ))}
               </ul>
-              <a
-                href={plan.ctaLink}
-                className={`block w-full text-center py-2 px-4 rounded ${
-                  plan.highlight
-                    ? 'bg-purple-600 text-white hover:bg-purple-700'
-                    : 'bg-gray-700 text-white hover:bg-gray-600'
-                } transition duration-300`}
+              <button
+                onClick={() => {
+                  window.openPocketsflowCheckout({
+                    type: "subscription",
+                    subscriptionId: "683c20e88a91a4ea38847650",
+                    subdomain: "serverend",
+                    isDarkMode: true,
+                    onSuccess: (data) => {
+                      // success callback
+
+                      // in data you will get:
+                      // {
+                      //   type: "success",
+                      //   setupIntentId: confirmed.setupIntent.id,
+                      //   data: confirmed.setupIntent,
+                      //   isSubscription: true,
+                      //   firstName,
+                      //   lastName,
+                      //   email,
+                      //   metadata: the webhook metadata object
+                      // }
+                      console.log("success", data);
+                    },
+                  });
+                }}
+                className={`relative block w-full text-center py-3 px-4 rounded font-medium cursor-pointer ${plan.highlight
+                  ? 'bg-purple-600 text-white hover:bg-purple-700'
+                  : 'bg-gray-700 text-white hover:bg-gray-600'
+                  } transition duration-300 transform hover:scale-105 active:scale-95`}
               >
                 {plan.cta}
-              </a>
+              </button>
             </motion.div>
           ))}
         </div>
       </div>
-    </section>
+    </section >
   )
 }
 

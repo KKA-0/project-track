@@ -6,6 +6,7 @@ import StoreProvider from './../libs/provider'
 import { Suspense } from "react";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { TanStackProviders } from "@/utils/providers/tanstack.providers";
+import Script from 'next/script'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,17 +23,22 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-      <GoogleOAuthProvider clientId="310626732775-10fe3ans7066vpu9g46aoi3o0atsffmm.apps.googleusercontent.com">
-        <AppRouterCacheProvider>
-          <StoreProvider>
-            <Suspense fallback={<div>Loading...</div>}>
-            <TanStackProviders>
-            {children}
-            </TanStackProviders>
-            </Suspense>
-          </StoreProvider>
-        </AppRouterCacheProvider>
+        <GoogleOAuthProvider clientId="310626732775-10fe3ans7066vpu9g46aoi3o0atsffmm.apps.googleusercontent.com">
+          <AppRouterCacheProvider>
+            <StoreProvider>
+              <Suspense fallback={<div>Loading...</div>}>
+                <TanStackProviders>
+                  {children}
+                </TanStackProviders>
+              </Suspense>
+            </StoreProvider>
+          </AppRouterCacheProvider>
         </GoogleOAuthProvider>
+        <Script
+          src="https://app.pocketsflow.com/pocketsflow-popup.js"
+          data-subdomain="serverend"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

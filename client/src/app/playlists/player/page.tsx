@@ -41,7 +41,7 @@ export default function Page() {
       }
     }
   }, []);
-  
+
 
   return (
     <>
@@ -58,8 +58,8 @@ export default function Page() {
             referrerPolicy="strict-origin-when-cross-origin"
           />
         </section>
-        <section className='h-screen w-1/3 bg-black'>
-          <CustomizedAccordions currentlyPlaying={video}/>
+        <section className='h-fit w-1/3 bg-white'>
+          <CustomizedAccordions currentlyPlaying={video} />
         </section>
       </div>
     </>

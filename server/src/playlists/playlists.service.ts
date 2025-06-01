@@ -96,5 +96,12 @@ export class PlaylistsService {
         return true;
     }
 
-
+    async findPlaylistByUserIDandPlaylistId(user_id: number, playlist_id: string) {
+        return this.playlistsRepository.findOne({
+            where: {
+                user_id,
+                playlist_id,
+            },
+        });
+    }
 }

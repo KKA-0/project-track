@@ -1,41 +1,34 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import { useState, useEffect, Suspense } from 'react';
-import Checkbox from '@mui/material/Checkbox';
+"use client"
+import { Suspense } from "react"
+import { useSearchParams } from "next/navigation"
+import { IoMdPlayCircle } from "react-icons/io"
+import { Clock, Play, Check } from "lucide-react"
+import Cookies from "js-cookie"
+import { useSelector } from "react-redux"
+
+import { Card, CardContent } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Badge } from "@/components/ui/badge"
 import { useAppDispatch } from "./../../../libs/hooks/hooks"
 import { videoStatus, currentVideo } from "./../../../libs/features/playlists.slice"
-import { useSearchParams } from "next/navigation";
-import { Tooltip } from 'react-tooltip'
-import { IoMdPlayCircle } from "react-icons/io";
-import { usePost } from "@/utils/api/apiService";
-import { set } from 'local-storage';
-import Cookies from 'js-cookie';
-import { useSelector } from 'react-redux'
-import { calculateProgress } from '@/libs/fun'
+import { usePost } from "@/utils/api/apiService"
+import { calculateProgress } from "@/libs/fun"
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  maxWidth: 400,
-}));
-
-const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-
-
-export default function VideoCard({ videoData, section, currentlyPlaying }: { videoData: any, section: any, currentlyPlaying: string }) {
+export default function VideoCard({
+  videoData,
+  section,
+  currentlyPlaying,
+}: {
+  videoData: any
+  section: any
+  currentlyPlaying: string
+}) {
   const dispatch = useAppDispatch()
-  const searchParams = useSearchParams();
-  const params = Object.fromEntries(searchParams.entries());
-  const playlistId = params?.playlistId;
-  const post = usePost('playlists/video/status');
+  const searchParams = useSearchParams()
+  const params = Object.fromEntries(searchParams.entries())
+  const playlistId = params?.playlistId
+  const post = usePost("playlists/video/status")
   const playlists = useSelector((state: any) => state.store.playlists)
 
   const handleVideoPlayer = (link: { link: string }) => {
@@ -43,85 +36,113 @@ export default function VideoCard({ videoData, section, currentlyPlaying }: { vi
   }
 
   const handleCheckbox = (videoTitle: any, checked: boolean) => {
-    // console.log(videoTitle, checked, playlistId, section)
-    const token = Cookies.get('access_token') || null;
+    const token = Cookies.get("access_token") || null
     if (token) {
-      const editablePlaylist = structuredClone(playlists[playlistId]);
-      let progress = calculateProgress(editablePlaylist, videoTitle, checked, section)
+      const editablePlaylist = structuredClone(playlists[playlistId])
+      const progress = calculateProgress(editablePlaylist, videoTitle, checked, section)
       console.log({ progress })
-      dispatch(videoStatus({ videoTitle, checked, playlistId, section, isUser: true, progress }));
-      post.mutate({ playlistId, section, videoTitle, checked, completedState: progress }, {
-        onSuccess: (data: any) => {
-          console.log("YOo bro")
-        }
-      });
+      dispatch(videoStatus({ videoTitle, checked, playlistId, section, isUser: true, progress }))
+      post.mutate(
+        { playlistId, section, videoTitle, checked, completedState: progress },
+        {
+          onSuccess: (data: any) => {
+            console.log("YOo bro")
+          },
+        },
+      )
     } else {
-      dispatch(videoStatus({ videoTitle, checked, playlistId, section, isUser: false }));
+      dispatch(videoStatus({ videoTitle, checked, playlistId, section, isUser: false }))
     }
-  };
+  }
 
   return (
-    <>
-      <Suspense fallback={<div>Loading...</div>}>
-        {
-          (videoData) ?
-            Object.keys(videoData).map(key => (
-              <Box
-                key={key}
-                data-tooltip-id={playlistId} data-tooltip-content={key}
-                sx={{
-                  flexGrow: 1,
-                  overflow: 'hidden',
-                  px: 1
-                }}
-              >
-                <Item
-                  onClick={() => handleVideoPlayer(videoData[key].link)}
-                  sx={{
-                    my: 1,
-                    mx: 'auto',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    cursor: 'pointer',
-                    ':hover': {
-                      backgroundColor: '#dfdfdf', // or use a specific shade like 'grey.300'
-                    },
-                  }}
-                >
-                  {
-                    (videoData[key].link === currentlyPlaying) ? <IoMdPlayCircle style={{ minWidth: '40px', minHeight: '40px', color: 'blueviolet' }} /> : null
-                  }
-
-                  <Checkbox
-                    {...label}
-                    onChange={(e) => handleCheckbox(key, e.target.checked)}
-                    checked={videoData[key].done}
-                    color="success"
-                  />
-                  <Stack spacing={2} direction="row" alignItems="center">
-                    <div className='h-fit w-fit p-1 bg-gray-200 rounded'>
-                      <span>{videoData[key].duration}</span>
-                    </div>
-                    <Typography
-                      fontSize={15}
-                      noWrap
-                      sx={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        maxWidth: '300px' // Adjust this value as needed
-                      }}
-                    >
-                      {key}
-                    </Typography>
-                  </Stack>
-                </Item>
-              </Box>
-            )
-            ) : null
+    <TooltipProvider>
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center p-4">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+          </div>
         }
-        <Tooltip id={playlistId} />
+      >
+        <div className="space-y-3">
+          {videoData &&
+            Object.keys(videoData).map((key) => (
+              <Tooltip key={key}>
+                <TooltipTrigger asChild>
+                  <Card
+                    className={`group cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.02] border shadow-md bg-white backdrop-blur-sm ${videoData[key].link === currentlyPlaying
+                      ? "ring-2 ring-primary border-primary shadow-primary/20"
+                      : "hover:border-primary/50"
+                      }`}
+                    onClick={() => handleVideoPlayer(videoData[key].link)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4">
+                        {/* Play indicator */}
+                        <div className="flex-shrink-0">
+                          {videoData[key].link === currentlyPlaying ? (
+                            <div className="relative">
+                              <IoMdPlayCircle className="w-10 h-10 text-primary animate-pulse" />
+                              <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping"></div>
+                            </div>
+                          ) : (
+                            <div className="w-10 h-10 rounded-full bg-muted/50 flex items-center justify-center group-hover:bg-primary/20 transition-all duration-200 group-hover:scale-110">
+                              <Play className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Content - Title always visible */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-3 mb-2">
+                            {/* Duration badge */}
+                            <Badge variant="secondary" className="flex items-center gap-1 text-xs font-medium shrink-0">
+                              <Clock className="w-3 h-3" />
+                              {videoData[key].duration}
+                            </Badge>
+
+                            {/* Completion indicator */}
+                            {(videoData[key].done) ? (
+                              <Badge className="bg-green-500/10 text-green-700 border-green-200 dark:bg-green-500/20 dark:text-green-400 dark:border-green-800 shrink-0">
+                                ✓ Completed
+                              </Badge>
+                            ) : ""}
+                            {1 && (
+                              <Badge className="bg-orange-500/10 text-orange-700 border-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-800 shrink-0">
+                                Due Today
+                              </Badge>
+                            )}
+                          </div>
+
+                          {/* Title - Always visible and prominent */}
+                          <h3 className="text-sm font-medium text-primary leading-relaxed line-clamp-2 group-hover:text-primary transition-colors">
+                            {key}
+                          </h3>
+                        </div>
+
+                        {/* Checkbox - Centered vertically */}
+                        <div className="flex-shrink-0 flex items-center justify-center">
+                          <div className="flex items-center justify-center w-12 h-12">
+                            <Checkbox
+                              checked={videoData[key].done}
+                              onCheckedChange={(checked) => handleCheckbox(key, checked)}
+                              className="w-5 h-5 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500 data-[state=checked]:text-white border-2 transition-all duration-200 hover:scale-110"
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-xs">
+                  <p className="text-sm font-medium">{key}</p>
+                  <p className="text-xs text-muted-foreground mt-1">Duration: {videoData[key].duration}</p>
+                </TooltipContent>
+              </Tooltip>
+            ))}
+        </div>
       </Suspense>
-    </>
-  );
+    </TooltipProvider>
+  )
 }
