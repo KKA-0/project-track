@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Headers } from '@nestjs/common';
+import { Controller, Post, Body, Headers, Get } from '@nestjs/common';
 import { SubscriptionsService } from './subscriptions.service';
 
 @Controller('subscriptions')
@@ -10,7 +10,7 @@ export class SubscriptionsController {
         return this.subscriptionsService.createSubscription(body.user_id);
     }
 
-    @Post('webhook')
+    @Get('webhook')
     async webhookSubscription(@Headers('x-pocketsflow-signature') signature: string, @Body() body: any) {
         return this.subscriptionsService.webhookSubscription(signature, body);
     }
