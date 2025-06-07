@@ -107,11 +107,11 @@ export default function VideoCard({
                                 ✓ Completed
                               </Badge>
                             ) : ""}
-                            {1 && (
+                            {/* {1 && (
                               <Badge className="bg-orange-500/10 text-orange-700 border-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-800 shrink-0">
                                 Due Today
                               </Badge>
-                            )}
+                            )} */}
                           </div>
 
                           {/* Title - Always visible and prominent */}

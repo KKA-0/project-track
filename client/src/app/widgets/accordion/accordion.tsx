@@ -432,11 +432,11 @@ export default function CustomizedAccordions({ currentlyPlaying }: { currentlyPl
               <Accordion key={key} expanded={expanded === key} onChange={handleChange(key)} id={key}>
                 <AccordionSummary onClick={handleChange(key)} expanded={expanded === key}>
                   <Typography>{key}
-                    {((plan[key].start_date) <= new Date().toISOString() && (plan[key].end_date) >= new Date().toISOString()) ? <Badge className="ml-2 bg-green-500/10 text-green-700 border-green-200 dark:bg-green-500/20 dark:text-green-400 dark:border-green-800 shrink-0">
+                    {(plan[key]) ? ((plan[key].start_date) <= new Date().toISOString() && (plan[key].end_date) >= new Date().toISOString()) ? <Badge className="ml-2 bg-green-500/10 text-green-700 border-green-200 dark:bg-green-500/20 dark:text-green-400 dark:border-green-800 shrink-0">
                       Continue
                     </Badge> : ((plan[key].end_date) < new Date().toISOString()) ? <Badge className="ml-2 bg-red-500/10 text-red-700 border-red-200 dark:bg-red-500/20 dark:text-red-400 dark:border-red-800 shrink-0">
                       Over Due
-                    </Badge> : ""}</Typography>
+                    </Badge> : "" : ""}</Typography>
                 </AccordionSummary>
                 <AccordionDetails expanded={expanded === key}>
                   <VideoCard videoData={StatePlaylists[key]} section={key} currentlyPlaying={currentlyPlaying} />

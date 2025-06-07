@@ -164,7 +164,10 @@ export default function FormDialog() {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <form onSubmit={handlePlaylists}>
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    handlePlaylists(e)
+                  }}>
                     <Dialog.Title
                       as="h3"
                       className="text-2xl font-semibold leading-6 text-gray-900 mb-4"
