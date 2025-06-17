@@ -5,6 +5,9 @@ const textsi_1 = {
   categorize the videos into sections based on topics like React, Node.js, etc. For each section,
   create a list of videos with title and link. The final structure should have a title, a short summary,
   completion status, and sections with categorized videos just like shown below json structure
+
+  Keep the sections positions in the progresive order. for example if the playlist is about nodejs, then the sections should be intro, variables, functions, etc. not variables, intro, functions, etc.
+    
 {
   "title": "Playlist Name",
   "info": "Brief summary in 15 words.",
